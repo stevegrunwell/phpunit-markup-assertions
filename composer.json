@@ -1,6 +1,6 @@
 {
     "name": "stevegrunwell/phpunit-markup-assertions",
-    "description": "Trait for verifying rendered markup with PHPUnit",
+    "description": "Assertions for PHPUnit to verify the presence or state of elements within markup",
     "keywords": ["phpunit", "testing", "markup"],
     "type": "library",
     "license": "MIT",
@@ -19,6 +19,11 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6.4"
+    },
+    "scripts": {
+        "test-coverage": [
+            "phpunit --coverage-html=tests/coverage"
+        ]
     },
     "autoload": {
         "psr-4": {
