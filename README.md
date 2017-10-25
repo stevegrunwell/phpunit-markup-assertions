@@ -89,6 +89,7 @@ These are the assertions made available to PHPUnit via the `MarkupAssertionsTrai
 
 * [`assertContainsSelector()`](#assertcontainsselector)
 * [`assertNotContainsSelector()`](#assertnotcontainsselector)
+* [`assertSelectorCount()`](#assertselectorcount)
 * [`assertHasElementWithAttributes()`](#asserthaselementwithattributes)
 * [`assertNotHasElementWithAttributes()`](#assertnothaselementwithattributes)
 
@@ -130,6 +131,34 @@ This method is the inverse of [`assertContainsSelector()`](#assertcontainsselect
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
+
+### assertSelectorCount()
+
+Assert the number of times an element matching the given selector is found.
+
+<dl>
+    <dt>(int) $count</dt>
+    <dd>The number of matching elements expected.</dd>
+    <dt>(string) $selector</dt>
+    <dd>A query selector for the element to find.</dd>
+    <dt>(string) $output</dt>
+    <dd>The markup to run the assertion against.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+#### Example
+
+```php
+public function testPostList()
+{
+    factory(Post::class, 10)->create();
+
+    $response = $this->get('/posts');
+
+    $this->assertSelectorCount(10, 'li.post-item', $response->getBody());
+}
+```
 
 ### assertHasElementWithAttributes()
 
