@@ -78,7 +78,7 @@ class MarkupAssertionsTraitTest extends TestCase
                 'type' => 'email',
                 'value' => 'test@example.com',
             ],
-            '<label>City</label><br><input type="text" value="New York" />'
+            '<label>City</label><br><input type="text" value="New York" data-foo="bar" />'
         );
     }
 
@@ -128,6 +128,12 @@ class MarkupAssertionsTraitTest extends TestCase
                     'checked' => null,
                 ],
                 '[checked]',
+            ],
+            'Data attribute' => [
+                [
+                    'data-foo' => 'bar',
+                ],
+                '[data-foo="bar"]',
             ],
             'Value contains quotes' => [
                 [
