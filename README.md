@@ -85,16 +85,23 @@ class MyUnitTest extends TestCase
 
 ## Available methods
 
+These are the assertions made available to PHPUnit via the `MarkupAssertionsTrait`.
+
+* [`assertContainsSelector()`](#assertcontainsselector)
+* [`assertNotContainsSelector()`](#assertnotcontainsselector)
+* [`assertHasElementWithAttributes()`](#asserthaselementwithattributes)
+* [`assertNotHasElementWithAttributes()`](#assertnothaselementwithattributes)
+
 ### assertContainsSelector()
 
 Assert that the given string contains an element matching the given selector.
 
 <dl>
-    <dt>$selector</dt>
+    <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>$output</dt>
-    <dd>The output that should contain the $selector.</dd>
-    <dt>$message</dt>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
 
@@ -116,10 +123,55 @@ Assert that the given string does not contain an element matching the given sele
 This method is the inverse of [`assertContainsSelector()`](#assertcontainsselector).
 
 <dl>
-    <dt>$selector</dt>
+    <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>$output</dt>
-    <dd>The output that should not contain the $selector.</dd>
-    <dt>$message</dt>
+    <dt>(string) $output</dt>
+    <dd>The output that should not contain the <code>$selector</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+### assertHasElementWithAttributes()
+
+Assert that an element with the given attributes exists in the given markup.
+
+<dl>
+    <dt>(array) $attributes</dt>
+    <dd>An array of HTML attributes that should be found on the element.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain an element with the provided <code>$attributes</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+#### Example
+
+```php
+public function testExpectedInputsArePresent()
+{
+    $user = getUser();
+    $form = getFormMarkup();
+
+    $this->assertHasElementWithAttributes(
+        [
+            'name' => 'first-name',
+            'value' => $user->first_name,
+        ],
+        $form,
+        'Did not find the expected input for the user first name.'
+    );
+}
+```
+
+### assertNotHasElementWithAttributes()
+
+Assert that an element with the given attributes does not exist in the given markup.
+
+<dl>
+    <dt>(array) $attributes</dt>
+    <dd>An array of HTML attributes that should not be found on the element.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should not contain an element with the provided <code>$attributes</code>.</dd>
+    <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
