@@ -43,6 +43,40 @@ trait MarkupAssertionsTrait
     }
 
     /**
+     * Assert that an element with the given attributes exists in the given markup.
+     *
+     * @param array  $attributes An array of HTML attributes that should be found on the element.
+     * @param string $output     The output that should contain an element with the
+     *                           provided $attributes.
+     * @param string $message    A message to display if the assertion fails.
+     */
+    public function assertHasElementWithAttributes($attributes = [], $output = '', $message = '')
+    {
+        $this->assertContainsSelector(
+            '*' . $this->flattenAttributeArray($attributes),
+            $output,
+            $message
+        );
+    }
+
+    /**
+     * Assert that an element with the given attributes does not exist in the given markup.
+     *
+     * @param array  $attributes An array of HTML attributes that should be found on the element.
+     * @param string $output     The output that should not contain an element with the
+     *                           provided $attributes.
+     * @param string $message    A message to display if the assertion fails.
+     */
+    public function assertNotHasElementWithAttributes($attributes = [], $output = '', $message = '')
+    {
+        $this->assertNotContainsSelector(
+            '*' . $this->flattenAttributeArray($attributes),
+            $output,
+            $message
+        );
+    }
+
+    /**
      * Build a new DOMDocument from the given markup, then execute a query against it.
      *
      * @param string $markup The HTML for the DOMDocument.
@@ -55,5 +89,32 @@ trait MarkupAssertionsTrait
         $dom = new Query($markup);
 
         return $dom->execute($query);
+    }
+
+    /**
+     * Given an array of HTML attributes, flatten them into a XPath attribute selector.
+     *
+     * @throws RiskyTestError When the $attributes array is empty.
+     *
+     * @param array $attributes HTML attributes and their values.
+     *
+     * @return string A XPath attribute query selector.
+     */
+    protected function flattenAttributeArray(array $attributes)
+    {
+        if (empty($attributes)) {
+            throw new RiskyTestError('Attributes array is empty.');
+        }
+
+        array_walk($attributes, function (&$value, $key) {
+            // Boolean attributes.
+            if (null === $value) {
+                $value = sprintf('[%s]', $key);
+            } else {
+                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
+            }
+        });
+
+        return implode('', $attributes);
     }
 }
