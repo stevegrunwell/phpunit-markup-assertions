@@ -34,10 +34,10 @@ class MarkupAssertionsTraitTest extends TestCase
 
     public function testAssertContainsWithMultipleMatches()
     {
-        $test = new TestCaseWithMarkupAssertions;
-        $html = '<a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact</a>';
-
-        $this->testcase->assertContainsSelector('a', $html);
+        $this->testcase->assertContainsSelector(
+            'a',
+            '<a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact</a>'
+        );
     }
 
     /**
