@@ -51,6 +51,15 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    public function testAssertSelectorCount()
+    {
+        $this->testcase->assertSelectorCount(
+            3,
+            'li',
+            '<ul><li>1</li><li>2</li><li>3</li></ul>'
+        );
+    }
+
     public function testAssertHasElementWithAttributes()
     {
         $this->testcase->assertHasElementWithAttributes(
