@@ -43,6 +43,21 @@ trait MarkupAssertionsTrait
     }
 
     /**
+     * Assert the number of times an element matching the given selector is found.
+     *
+     * @param int    $count    The number of matching elements expected.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The markup to run the assertion against.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertSelectorCount($count, $selector, $output = '', $message = '')
+    {
+        $results = $this->executeDomQuery($output, $selector);
+
+        $this->assertCount($count, $results, $message);
+    }
+
+    /**
      * Assert that an element with the given attributes exists in the given markup.
      *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
