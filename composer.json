@@ -1,7 +1,7 @@
 {
     "name": "stevegrunwell/phpunit-markup-assertions",
     "description": "Assertions for PHPUnit to verify the presence or state of elements within markup",
-    "keywords": ["phpunit", "testing", "markup"],
+    "keywords": ["phpunit", "testing", "markup", "dom"],
     "type": "library",
     "license": "MIT",
     "authors": [
