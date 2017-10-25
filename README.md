@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/stevegrunwell/phpunit-markup-assertions.svg?branch=develop)](https://travis-ci.org/stevegrunwell/phpunit-markup-assertions)
 [![Coverage Status](https://coveralls.io/repos/github/stevegrunwell/phpunit-markup-assertions/badge.svg?branch=develop)](https://coveralls.io/github/stevegrunwell/phpunit-markup-assertions?branch=develop)
+[![GitHub release](https://img.shields.io/github/release/stevegrunwell/phpunit-markup-assertions.svg)](https://github.com/stevegrunwell/phpunit-markup-assertions/releases)
 
 This library introduces the `MarkupAssertionsTrait` trait for use in [PHPUnit](https://phpunit.de) tests.
 
