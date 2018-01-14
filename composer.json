@@ -27,7 +27,11 @@
     },
     "autoload": {
         "psr-4": {
-            "SteveGrunwell\\PHPUnit_Markup_Assertions\\": "src/",
+            "SteveGrunwell\\PHPUnit_Markup_Assertions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\": "tests/"
         }
     }
