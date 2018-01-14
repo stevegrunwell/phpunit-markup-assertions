@@ -94,6 +94,11 @@ These are the assertions made available to PHPUnit via the `MarkupAssertionsTrai
 * [`assertHasElementWithAttributes()`](#asserthaselementwithattributes)
 * [`assertNotHasElementWithAttributes()`](#assertnothaselementwithattributes)
 
+* [`assertElementContains()`](#assertelementcontains)
+* [`assertElementNotContains()`](#assertelementnotcontains)
+* [`assertElementRegExp()`](#assertelementregexp)
+* [`assertElementNotRegExp()`](#assertelementnotregexp)
+
 ### assertContainsSelector()
 
 Assert that the given string contains an element matching the given selector.
@@ -276,7 +281,7 @@ This method works just like [`assertElementContains()`](#assertelementcontains),
 
 Assert that the element with the given selector does not contain a string.
 
-This method is the inverse of [`assertElementRegExp()`](#assertelementregexp) and behaves like [`assertElementNotContains`](#assertelementnotcontains) except with regular expressions instead of simple string matching.
+This method is the inverse of [`assertElementRegExp()`](#assertelementregexp) and behaves like [`assertElementNotContains()`](#assertelementnotcontains) except with regular expressions instead of simple string matching.
 
 <dl>
     <dt>(string) $regexp</dt>
