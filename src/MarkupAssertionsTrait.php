@@ -8,6 +8,7 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
+use DOMDocument;
 use PHPUnit\Framework\RiskyTestError;
 use Zend\Dom\Query;
 
@@ -92,6 +93,40 @@ trait MarkupAssertionsTrait
     }
 
     /**
+     * Assert an element's contents contain the given string.
+     *
+     * @param string $contents The string to look for within the DOM node's contents.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementContains($contents, $selector = '', $output = '', $message = '')
+    {
+        $this->assertContains(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
+     * Assert an element's contents do not contain the given string.
+     *
+     * @param string $contents The string to look for within the DOM node's contents.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should not contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
+    {
+        $this->assertNotContains(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
      * Build a new DOMDocument from the given markup, then execute a query against it.
      *
      * @param string $markup The HTML for the DOMDocument.
@@ -131,5 +166,29 @@ trait MarkupAssertionsTrait
         });
 
         return implode('', $attributes);
+    }
+
+    /**
+     * Given HTML markup and a DOM selector query, collect the innerHTML of the matched selectors.
+     *
+     * @param string $markup The HTML for the DOMDocument.
+     * @param string $query  The DOM selector query.
+     *
+     * @return string The concatenated innerHTML of any matched selectors.
+     */
+    protected function getInnerHtmlOfMatchedElements($markup, $query)
+    {
+        $results  = $this->executeDomQuery($markup, $query);
+        $contents = [];
+
+        // Loop through results and collect their innerHTML values.
+        foreach ($results as $result) {
+            $document = new DOMDocument;
+            $document->appendChild($document->importNode($result->firstChild, true));
+
+            $contents[] = trim($document->saveHTML());
+        }
+
+        return implode(PHP_EOL, $contents);
     }
 }
