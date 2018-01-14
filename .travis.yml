@@ -7,10 +7,15 @@ php:
 
 sudo: false
 
+env:
+  matrix:
+    - PREFER_LOWEST="--prefer-lowest --prefer-stable"
+    - PREFER_LOWEST=""
+
 install:
   - wget https://github.com/php-coveralls/php-coveralls/releases/download/v1.0.0/coveralls.phar
   - chmod +x coveralls.phar
-  - composer install --no-interaction --prefer-dist
+  - composer update --no-interaction --prefer-dist $PREFER_LOWEST
 
 script:
   - mkdir -p build/logs

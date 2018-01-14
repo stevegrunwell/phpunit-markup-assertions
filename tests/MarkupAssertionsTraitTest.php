@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -82,6 +83,64 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    public function testAssertElementContains()
+    {
+        $this->testcase->assertElementContains(
+            'ipsum',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main">Lorem ipsum</div>'
+        );
+    }
+
+    public function testAssertElementContainsScopesToSelector()
+    {
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('The #main div does not contain the string "ipsum".');
+
+        $this->testcase->assertElementContains(
+            'ipsum',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main">Foo bar baz</div>',
+            'The #main div does not contain the string "ipsum".'
+        );
+    }
+
+    public function testAssertElementNotContains()
+    {
+        $this->testcase->assertElementNotContains(
+            'ipsum',
+            '#main',
+            '<header>Foo bar baz</header><div id="main">Some string</div>'
+        );
+    }
+
+    public function testAssertElementRegExp()
+    {
+        $this->testcase->assertElementRegExp(
+            '/[A-Z0-9-]+/',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main">ABC123</div>'
+        );
+    }
+
+    public function testAssertElementRegExpWithNestedElements()
+    {
+        $this->testcase->assertElementRegExp(
+            '/[A-Z]+/',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main"><span>ABC</span></div>'
+        );
+    }
+
+    public function testAssertElementNotRegExp()
+    {
+        $this->testcase->assertElementNotRegExp(
+            '/[0-9-]+/',
+            '#main',
+            '<header>Foo bar baz</header><div id="main">ABC</div>'
+        );
+    }
+
     /**
      * @dataProvider attributeProvider()
      */
@@ -102,6 +161,16 @@ class MarkupAssertionsTraitTest extends TestCase
         $method->setAccessible(true);
 
         $method->invoke($this->testcase, []);
+    }
+
+    /**
+     * @dataProvider innerHtmlProvider().
+     */
+    public function testGetInnerHtmlOfMatchedElements($markup, $selector, $expected) {
+        $method = new ReflectionMethod($this->testcase, 'getInnerHtmlOfMatchedElements');
+        $method->setAccessible(true);
+
+        $this->assertEquals($expected, $method->invoke($this->testcase, $markup, $selector));
     }
 
     /**
@@ -140,6 +209,30 @@ class MarkupAssertionsTraitTest extends TestCase
                     'name' => 'Austin "Danger" Powers',
                 ],
                 '[name="Austin &quot;Danger&quot; Powers"]',
+            ],
+        ];
+    }
+
+    /**
+     * Data provider for testGetInnerHtmlOfMatchedElements().
+     */
+    public function innerHtmlProvider()
+    {
+        return [
+            'A single match' => [
+                '<body>Foo bar baz</body>',
+                'body',
+                'Foo bar baz',
+            ],
+            'Multiple matching elements' => [
+                '<ul><li>Foo</li><li>Bar</li><li>Baz</li>',
+                'li',
+                'Foo' . PHP_EOL . 'Bar' . PHP_EOL . 'Baz',
+            ],
+            'Nested elements' => [
+                '<h1><a href="https://example.com">Example site</a></h1>',
+                'h1',
+                '<a href="https://example.com">Example site</a>',
             ],
         ];
     }

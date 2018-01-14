@@ -93,6 +93,10 @@ These are the assertions made available to PHPUnit via the `MarkupAssertionsTrai
 * [`assertSelectorCount()`](#assertselectorcount)
 * [`assertHasElementWithAttributes()`](#asserthaselementwithattributes)
 * [`assertNotHasElementWithAttributes()`](#assertnothaselementwithattributes)
+* [`assertElementContains()`](#assertelementcontains)
+* [`assertElementNotContains()`](#assertelementnotcontains)
+* [`assertElementRegExp()`](#assertelementregexp)
+* [`assertElementNotRegExp()`](#assertelementnotregexp)
 
 ### assertContainsSelector()
 
@@ -202,6 +206,89 @@ Assert that an element with the given attributes does not exist in the given mar
     <dd>An array of HTML attributes that should not be found on the element.</dd>
     <dt>(string) $output</dt>
     <dd>The output that should not contain an element with the provided <code>$attributes</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+### assertElementContains()
+
+Assert that the element with the given selector contains a string.
+
+<dl>
+    <dt>(string) $contents</dt>
+    <dd>The string to look for within the DOM node's contents.</dd>
+    <dt>(string) $selector</dt>
+    <dd>A query selector for the element to find.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+#### Example
+
+```php
+public function testColumnShowsUserEmail()
+{
+    $user = getUser();
+    $table = getTableMarkup();
+
+    $this->assertElementContains(
+        $user->email,
+        'td.email',
+        $table,
+        'The <td class="email"> should contain the user\'s email address.'
+    );
+}
+```
+
+### assertElementNotContains()
+
+Assert that the element with the given selector does not contain a string.
+
+This method is the inverse of [`assertElementContains()`](#assertelementcontains).
+
+<dl>
+    <dt>(string) $contents</dt>
+    <dd>The string to look for within the DOM node's contents.</dd>
+    <dt>(string) $selector</dt>
+    <dd>A query selector for the element to find.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+### assertElementRegExp()
+
+Assert that the element with the given selector contains a string.
+
+This method works just like [`assertElementContains()`](#assertelementcontains), but uses regular expressions instead of simple string matching.
+
+<dl>
+    <dt>(string) $regexp</dt>
+    <dd>The regular expression pattern to look for within the DOM node.</dd>
+    <dt>(string) $selector</dt>
+    <dd>A query selector for the element to find.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $message</dt>
+    <dd>A message to display if the assertion fails.</dd>
+</dl>
+
+### assertElementNotRegExp()
+
+Assert that the element with the given selector does not contain a string.
+
+This method is the inverse of [`assertElementRegExp()`](#assertelementregexp) and behaves like [`assertElementNotContains()`](#assertelementnotcontains) except with regular expressions instead of simple string matching.
+
+<dl>
+    <dt>(string) $regexp</dt>
+    <dd>The regular expression pattern to look for within the DOM node.</dd>
+    <dt>(string) $selector</dt>
+    <dd>A query selector for the element to find.</dd>
+    <dt>(string) $output</dt>
+    <dd>The output that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>

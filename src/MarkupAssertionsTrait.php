@@ -8,6 +8,7 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
+use DOMDocument;
 use PHPUnit\Framework\RiskyTestError;
 use Zend\Dom\Query;
 
@@ -16,6 +17,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert that the given string contains an element matching the given selector.
+     *
+     * @since 1.0.0
      *
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should contain the $selector.
@@ -31,6 +34,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert that the given string does not contain an element matching the given selector.
      *
+     * @since 1.0.0
+     *
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
@@ -44,6 +49,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert the number of times an element matching the given selector is found.
+     *
+     * @since 1.0.0
      *
      * @param int    $count    The number of matching elements expected.
      * @param string $selector A query selector for the element to find.
@@ -59,6 +66,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert that an element with the given attributes exists in the given markup.
+     *
+     * @since 1.0.0
      *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
      * @param string $output     The output that should contain an element with the
@@ -77,6 +86,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert that an element with the given attributes does not exist in the given markup.
      *
+     * @since 1.0.0
+     *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
      * @param string $output     The output that should not contain an element with the
      *                           provided $attributes.
@@ -92,7 +103,85 @@ trait MarkupAssertionsTrait
     }
 
     /**
+     * Assert an element's contents contain the given string.
+     *
+     * @since 1.1.0
+     *
+     * @param string $contents The string to look for within the DOM node's contents.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementContains($contents, $selector = '', $output = '', $message = '')
+    {
+        $this->assertContains(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
+     * Assert an element's contents do not contain the given string.
+     *
+     * @since 1.1.0
+     *
+     * @param string $contents The string to look for within the DOM node's contents.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should not contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
+    {
+        $this->assertNotContains(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
+     * Assert an element's contents contain the given regular expression pattern.
+     *
+     * @since 1.1.0
+     *
+     * @param string $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
+    {
+        $this->assertRegExp(
+            $regexp,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
+     * Assert an element's contents do not contain the given regular expression pattern.
+     *
+     * @since 1.1.0
+     *
+     * @param string $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should not contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
+    {
+        $this->assertNotRegExp(
+            $regexp,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
      * Build a new DOMDocument from the given markup, then execute a query against it.
+     *
+     * @since 1.0.0
      *
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
@@ -108,6 +197,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Given an array of HTML attributes, flatten them into a XPath attribute selector.
+     *
+     * @since 1.0.0
      *
      * @throws RiskyTestError When the $attributes array is empty.
      *
@@ -131,5 +222,31 @@ trait MarkupAssertionsTrait
         });
 
         return implode('', $attributes);
+    }
+
+    /**
+     * Given HTML markup and a DOM selector query, collect the innerHTML of the matched selectors.
+     *
+     * @since 1.1.0
+     *
+     * @param string $markup The HTML for the DOMDocument.
+     * @param string $query  The DOM selector query.
+     *
+     * @return string The concatenated innerHTML of any matched selectors.
+     */
+    protected function getInnerHtmlOfMatchedElements($markup, $query)
+    {
+        $results  = $this->executeDomQuery($markup, $query);
+        $contents = [];
+
+        // Loop through results and collect their innerHTML values.
+        foreach ($results as $result) {
+            $document = new DOMDocument;
+            $document->appendChild($document->importNode($result->firstChild, true));
+
+            $contents[] = trim($document->saveHTML());
+        }
+
+        return implode(PHP_EOL, $contents);
     }
 }

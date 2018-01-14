@@ -15,10 +15,10 @@
         "source": "https://github.com/stevegrunwell/phpunit-markup-assertions/"
     },
     "require": {
-        "zendframework/zend-dom": "^2.6"
+        "zendframework/zend-dom": "^2.2.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.4"
+        "phpunit/phpunit": ">=6.0"
     },
     "scripts": {
         "test-coverage": [
@@ -27,7 +27,11 @@
     },
     "autoload": {
         "psr-4": {
-            "SteveGrunwell\\PHPUnit_Markup_Assertions\\": "src/",
+            "SteveGrunwell\\PHPUnit_Markup_Assertions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\": "tests/"
         }
     }
