@@ -18,6 +18,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert that the given string contains an element matching the given selector.
      *
+     * @since 1.0.0
+     *
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
@@ -31,6 +33,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert that the given string does not contain an element matching the given selector.
+     *
+     * @since 1.0.0
      *
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
@@ -46,6 +50,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert the number of times an element matching the given selector is found.
      *
+     * @since 1.0.0
+     *
      * @param int    $count    The number of matching elements expected.
      * @param string $selector A query selector for the element to find.
      * @param string $output   The markup to run the assertion against.
@@ -60,6 +66,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert that an element with the given attributes exists in the given markup.
+     *
+     * @since 1.0.0
      *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
      * @param string $output     The output that should contain an element with the
@@ -78,6 +86,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert that an element with the given attributes does not exist in the given markup.
      *
+     * @since 1.0.0
+     *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
      * @param string $output     The output that should not contain an element with the
      *                           provided $attributes.
@@ -94,6 +104,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert an element's contents contain the given string.
+     *
+     * @since 1.1.0
      *
      * @param string $contents The string to look for within the DOM node's contents.
      * @param string $selector A query selector for the element to find.
@@ -112,6 +124,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert an element's contents do not contain the given string.
      *
+     * @since 1.1.0
+     *
      * @param string $contents The string to look for within the DOM node's contents.
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
@@ -128,6 +142,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Assert an element's contents contain the given regular expression pattern.
+     *
+     * @since 1.1.0
      *
      * @param string $regexp   The regular expression pattern to look for within the DOM node.
      * @param string $selector A query selector for the element to find.
@@ -146,6 +162,8 @@ trait MarkupAssertionsTrait
     /**
      * Assert an element's contents do not contain the given regular expression pattern.
      *
+     * @since 1.1.0
+     *
      * @param string $regexp   The regular expression pattern to look for within the DOM node.
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
@@ -163,6 +181,8 @@ trait MarkupAssertionsTrait
     /**
      * Build a new DOMDocument from the given markup, then execute a query against it.
      *
+     * @since 1.0.0
+     *
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
      *
@@ -177,6 +197,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Given an array of HTML attributes, flatten them into a XPath attribute selector.
+     *
+     * @since 1.0.0
      *
      * @throws RiskyTestError When the $attributes array is empty.
      *
@@ -204,6 +226,8 @@ trait MarkupAssertionsTrait
 
     /**
      * Given HTML markup and a DOM selector query, collect the innerHTML of the matched selectors.
+     *
+     * @since 1.1.0
      *
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
