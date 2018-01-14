@@ -93,7 +93,6 @@ These are the assertions made available to PHPUnit via the `MarkupAssertionsTrai
 * [`assertSelectorCount()`](#assertselectorcount)
 * [`assertHasElementWithAttributes()`](#asserthaselementwithattributes)
 * [`assertNotHasElementWithAttributes()`](#assertnothaselementwithattributes)
-
 * [`assertElementContains()`](#assertelementcontains)
 * [`assertElementNotContains()`](#assertelementnotcontains)
 * [`assertElementRegExp()`](#assertelementregexp)
