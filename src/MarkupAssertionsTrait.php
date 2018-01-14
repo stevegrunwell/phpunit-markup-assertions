@@ -127,6 +127,40 @@ trait MarkupAssertionsTrait
     }
 
     /**
+     * Assert an element's contents contain the given regular expression pattern.
+     *
+     * @param string $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
+    {
+        $this->assertRegExp(
+            $regexp,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
+     * Assert an element's contents do not contain the given regular expression pattern.
+     *
+     * @param string $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string $selector A query selector for the element to find.
+     * @param string $output   The output that should not contain the $selector.
+     * @param string $message  A message to display if the assertion fails.
+     */
+    public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
+    {
+        $this->assertNotRegExp(
+            $regexp,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
+    }
+
+    /**
      * Build a new DOMDocument from the given markup, then execute a query against it.
      *
      * @param string $markup The HTML for the DOMDocument.

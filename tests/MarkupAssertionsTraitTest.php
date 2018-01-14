@@ -114,6 +114,33 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    public function testAssertElementRegExp()
+    {
+        $this->testcase->assertElementRegExp(
+            '/[A-Z0-9-]+/',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main">ABC123</div>'
+        );
+    }
+
+    public function testAssertElementRegExpWithNestedElements()
+    {
+        $this->testcase->assertElementRegExp(
+            '/[A-Z]+/',
+            '#main',
+            '<header>Lorem ipsum</header><div id="main"><span>ABC</span></div>'
+        );
+    }
+
+    public function testAssertElementNotRegExp()
+    {
+        $this->testcase->assertElementNotRegExp(
+            '/[0-9-]+/',
+            '#main',
+            '<header>Foo bar baz</header><div id="main">ABC</div>'
+        );
+    }
+
     /**
      * @dataProvider attributeProvider()
      */
