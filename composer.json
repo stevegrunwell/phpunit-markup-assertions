@@ -15,7 +15,7 @@
         "source": "https://github.com/stevegrunwell/phpunit-markup-assertions/"
     },
     "require": {
-        "zendframework/zend-dom": "^2.6"
+        "zendframework/zend-dom": "^2.2.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.4"
