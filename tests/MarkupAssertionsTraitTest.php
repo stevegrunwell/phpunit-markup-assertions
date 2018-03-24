@@ -105,6 +105,15 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    public function testAssertElementContainsMultipleSelectors()
+    {
+        $this->testcase->assertElementContains(
+            'ipsum',
+            '#main .foo',
+            '<div id="main"><span class="foo">Lorem ipsum</span></div>'
+        );
+    }
+
     public function testAssertElementContainsScopesToSelector()
     {
         $this->expectException(AssertionFailedError::class);
