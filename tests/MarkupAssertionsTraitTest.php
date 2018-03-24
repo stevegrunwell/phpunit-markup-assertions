@@ -72,6 +72,19 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    /**
+     * @link https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
+     */
+    public function testAssertHasElementWithAttributesWithSpacesInTheAttributeValue()
+    {
+        $this->testcase->assertHasElementWithAttributes(
+            [
+                'data-attr' => 'foo bar baz',
+            ],
+            '<div data-attr="foo bar baz">Contents</div>'
+        );
+    }
+
     public function testAssertNotHasElementWithAttributes()
     {
         $this->testcase->assertNotHasElementWithAttributes(
