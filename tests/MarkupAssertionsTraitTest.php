@@ -72,6 +72,19 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
+    /**
+     * @link https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
+     */
+    public function testAssertHasElementWithAttributesWithSpacesInTheAttributeValue()
+    {
+        $this->testcase->assertHasElementWithAttributes(
+            [
+                'data-attr' => 'foo bar baz',
+            ],
+            '<div data-attr="foo bar baz">Contents</div>'
+        );
+    }
+
     public function testAssertNotHasElementWithAttributes()
     {
         $this->testcase->assertNotHasElementWithAttributes(
@@ -89,6 +102,15 @@ class MarkupAssertionsTraitTest extends TestCase
             'ipsum',
             '#main',
             '<header>Lorem ipsum</header><div id="main">Lorem ipsum</div>'
+        );
+    }
+
+    public function testAssertElementContainsMultipleSelectors()
+    {
+        $this->testcase->assertElementContains(
+            'ipsum',
+            '#main .foo',
+            '<div id="main"><span class="foo">Lorem ipsum</span></div>'
         );
     }
 
