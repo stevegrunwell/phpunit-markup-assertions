@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+* Update Composer dependencies, add a `composer test` script ([#15]).
+
 ## [1.2.0] - 2018-03-27
 
 * Bumped the minimum version of zendframework/zend-dom to 2.7, which includes a fix for attribute values that include spaces ([#13]).
@@ -29,3 +33,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [#8]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/8
 [#9]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/9
 [#13]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
+[#15]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/15
