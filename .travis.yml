@@ -5,6 +5,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4
 
 sudo: false
 
@@ -24,6 +25,3 @@ script:
 
 after_success:
   - travis_retry php coveralls.phar
-
-notifications:
-  email: false
