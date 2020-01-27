@@ -15,7 +15,7 @@
         "source": "https://github.com/stevegrunwell/phpunit-markup-assertions/"
     },
     "require": {
-        "zendframework/zend-dom": "^2.7"
+        "laminas/laminas-dom": "^2.7"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0"
@@ -45,9 +45,6 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true,
-        "platform": {
-            "php": "7.2"
-        }
+        "optimize-autoloader": true
     }
 }

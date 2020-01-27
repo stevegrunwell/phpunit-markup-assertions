@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+* Replace `zendframework/zend-dom` with `laminas/laminas-dom` ([#16]).
 * Update Composer dependencies, add a `composer test` script ([#15]).
 
 ## [1.2.0] - 2018-03-27
@@ -34,3 +35,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [#9]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/9
 [#13]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
 [#15]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/15
+[#16]: https://github.com/stevegrunwell/phpunit-markup-assertions/issues/16
