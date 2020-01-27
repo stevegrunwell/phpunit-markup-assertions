@@ -9,8 +9,8 @@
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
 use DOMDocument;
+use Laminas\Dom\Query;
 use PHPUnit\Framework\RiskyTestError;
-use Zend\Dom\Query;
 
 trait MarkupAssertionsTrait
 {
