@@ -114,7 +114,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $output = '', $message = '')
     {
-        $this->assertContains(
+        $this->assertStringContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
@@ -133,7 +133,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
     {
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
