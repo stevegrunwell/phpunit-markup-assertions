@@ -141,7 +141,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
     {
-        if (method_exists($this, 'assertStringContainsString')) {
+        if (method_exists($this, 'assertStringNotContainsString')) {
             $this->assertStringNotContainsString(
                 $contents,
                 $this->getInnerHtmlOfMatchedElements($output, $selector),
