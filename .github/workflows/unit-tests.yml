@@ -22,13 +22,6 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           coverage: none
 
-      - name: Setup PHP w/ Code Coverage
-        uses: shivammathur/setup-php@v2
-        if: ${{ matrix.php == '7.4' }}
-        with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: xdebug
-
       - name: Get composer cache directory
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
@@ -46,7 +39,3 @@ jobs:
       - name: Run test suite
         if: ${{ matrix.php != '7.4' }}
         run: composer test
-
-      - name: Run test suite with code coverage
-        if: ${{ matrix.php == '7.4' }}
-        run: composer test --coverage-text
