@@ -18,7 +18,7 @@
         "laminas/laminas-dom": "^2.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0"
+        "symfony/phpunit-bridge": "^5.2"
     },
     "autoload": {
         "psr-4": {
@@ -32,10 +32,10 @@
     },
     "scripts": {
         "test": [
-            "phpunit"
+            "simple-phpunit --testdox"
         ],
         "test-coverage": [
-            "phpunit --coverage-html=tests/coverage"
+            "phpdbg -qrr -d memory_limit=-1 ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
         ]
     },
     "scripts-descriptions": {
@@ -45,6 +45,8 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "platform": {
+            "php": "7.4"
+        }
     }
 }
