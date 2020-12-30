@@ -13,13 +13,16 @@ class MarkupAssertionsTraitTest extends TestCase
     /**
      * Holds a clean instance of TestCaseWithMarkupAssertions.
      *
-     * @var TestCaseWithMarkupAssertions
+     * @var \Tests\TestFiles\TestCaseWithMarkupAssertions
      */
     protected $testcase;
 
-    public function setUp()
+    /**
+     * @before
+     */
+    protected function buildInstance()
     {
-        $this->testcase = new TestCaseWithMarkupAssertions;
+        $this->testcase = new TestCaseWithMarkupAssertions();
     }
 
     /**
@@ -168,18 +171,16 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function testFlattenAttributeArray($attributes, $expected)
     {
-        $method = new ReflectionMethod($this->testcase, 'flattenAttributeArray');
+        $method = new \ReflectionMethod($this->testcase, 'flattenAttributeArray');
         $method->setAccessible(true);
 
         $this->assertEquals($expected, $method->invoke($this->testcase, $attributes));
     }
 
-    /**
-     * @expectedException PHPUnit\Framework\RiskyTestError
-     */
     public function testFlattenAttributeArrayThrowsRiskyTestError()
     {
-        $method = new ReflectionMethod($this->testcase, 'flattenAttributeArray');
+        $this->expectException(RiskyTestError::class);
+        $method = new \ReflectionMethod($this->testcase, 'flattenAttributeArray');
         $method->setAccessible(true);
 
         $method->invoke($this->testcase, []);
@@ -189,7 +190,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @dataProvider innerHtmlProvider().
      */
     public function testGetInnerHtmlOfMatchedElements($markup, $selector, $expected) {
-        $method = new ReflectionMethod($this->testcase, 'getInnerHtmlOfMatchedElements');
+        $method = new \ReflectionMethod($this->testcase, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 
         $this->assertEquals($expected, $method->invoke($this->testcase, $markup, $selector));
