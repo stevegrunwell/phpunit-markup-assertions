@@ -5,27 +5,14 @@ namespace Tests;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
-use Tests\TestFiles\TestCaseWithMarkupAssertions;
+use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 
 /**
  * @covers SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait
  */
 class MarkupAssertionsTraitTest extends TestCase
 {
-    /**
-     * Holds a clean instance of TestCaseWithMarkupAssertions.
-     *
-     * @var \Tests\TestFiles\TestCaseWithMarkupAssertions
-     */
-    protected $testcase;
-
-    /**
-     * @before
-     */
-    protected function buildInstance()
-    {
-        $this->testcase = new TestCaseWithMarkupAssertions();
-    }
+    use MarkupAssertionsTrait;
 
     /**
      * @test
@@ -34,7 +21,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertContainsSelector_should_find_matching_selectors($selector)
     {
-        $this->testcase->assertContainsSelector(
+        $this->assertContainsSelector(
             $selector,
             '<a href="https://example.com" id="my-link" class="link another-class">Example</a>'
         );
@@ -46,7 +33,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertContainsSelector_should_pick_up_multiple_instances()
     {
-        $this->testcase->assertContainsSelector(
+        $this->assertContainsSelector(
             'a',
             '<a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact</a>'
         );
@@ -59,7 +46,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist($selector)
     {
-        $this->testcase->assertNotContainsSelector(
+        $this->assertNotContainsSelector(
             $selector,
             '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>'
         );
@@ -71,7 +58,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertSelectorCount_should_count_the_number_of_instances()
     {
-        $this->testcase->assertSelectorCount(
+        $this->assertSelectorCount(
             3,
             'li',
             '<ul><li>1</li><li>2</li><li>3</li></ul>'
@@ -84,7 +71,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertHasElementWithAttributes_should_find_elements_with_matching_attributes()
     {
-        $this->testcase->assertHasElementWithAttributes(
+        $this->assertHasElementWithAttributes(
             [
                 'type' => 'email',
                 'value' => 'test@example.com',
@@ -100,7 +87,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertHasElementWithAttributes_should_be_able_to_handle_spaces()
     {
-        $this->testcase->assertHasElementWithAttributes(
+        $this->assertHasElementWithAttributes(
             [
                 'data-attr' => 'foo bar baz',
             ],
@@ -114,7 +101,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertNotHasElementWithAttributes_should_find_no_elements_with_matching_attributes()
     {
-        $this->testcase->assertNotHasElementWithAttributes(
+        $this->assertNotHasElementWithAttributes(
             [
                 'type' => 'email',
                 'value' => 'test@example.com',
@@ -129,7 +116,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertElementContains_can_match_a_selector()
     {
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main',
             '<header>Lorem ipsum</header><div id="main">Lorem ipsum</div>'
@@ -142,7 +129,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertElementContains_can_chain_multiple_selectors()
     {
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main .foo',
             '<div id="main"><span class="foo">Lorem ipsum</span></div>'
@@ -158,7 +145,7 @@ class MarkupAssertionsTraitTest extends TestCase
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('The #main div does not contain the string "ipsum".');
 
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main',
             '<header>Lorem ipsum</header><div id="main">Foo bar baz</div>',
@@ -172,7 +159,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertElementNotContains_can_match_a_selector()
     {
-        $this->testcase->assertElementNotContains(
+        $this->assertElementNotContains(
             'ipsum',
             '#main',
             '<header>Foo bar baz</header><div id="main">Some string</div>'
@@ -185,7 +172,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertElementRegExp_should_use_regular_expression_matching()
     {
-        $this->testcase->assertElementRegExp(
+        $this->assertElementRegExp(
             '/[A-Z0-9-]+/',
             '#main',
             '<header>Lorem ipsum</header><div id="main">ABC123</div>'
@@ -198,7 +185,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function assertElementRegExp_should_be_able_to_match_nested_contents()
     {
-        $this->testcase->assertElementRegExp(
+        $this->assertElementRegExp(
             '/[A-Z]+/',
             '#main',
             '<header>Lorem ipsum</header><div id="main"><span>ABC</span></div>'
@@ -211,7 +198,7 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function testAssertElementNotRegExp()
     {
-        $this->testcase->assertElementNotRegExp(
+        $this->assertElementNotRegExp(
             '/[0-9-]+/',
             '#main',
             '<header>Foo bar baz</header><div id="main">ABC</div>'
@@ -226,10 +213,10 @@ class MarkupAssertionsTraitTest extends TestCase
      */
     public function flattenArrayAttribute_should_flatten_arrays_of_attributes($attributes, $expected)
     {
-        $method = new \ReflectionMethod($this->testcase, 'flattenAttributeArray');
+        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
         $method->setAccessible(true);
 
-        $this->assertSame($expected, $method->invoke($this->testcase, $attributes));
+        $this->assertSame($expected, $method->invoke($this, $attributes));
     }
 
     /**
@@ -241,9 +228,9 @@ class MarkupAssertionsTraitTest extends TestCase
     {
         $this->expectException(RiskyTestError::class);
 
-        $method = new \ReflectionMethod($this->testcase, 'flattenAttributeArray');
+        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
         $method->setAccessible(true);
-        $method->invoke($this->testcase, []);
+        $method->invoke($this, []);
     }
 
     /**
@@ -252,10 +239,10 @@ class MarkupAssertionsTraitTest extends TestCase
      * @dataProvider provideInnerHtml
      */
     public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected) {
-        $method = new \ReflectionMethod($this->testcase, 'getInnerHtmlOfMatchedElements');
+        $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invoke($this->testcase, $markup, $selector));
+        $this->assertEquals($expected, $method->invoke($this, $markup, $selector));
     }
 
     /**
