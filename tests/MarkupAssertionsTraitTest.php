@@ -5,65 +5,73 @@ namespace Tests;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
-use ReflectionMethod;
-use Tests\TestFiles\TestCaseWithMarkupAssertions;
+use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 
+/**
+ * @covers SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait
+ */
 class MarkupAssertionsTraitTest extends TestCase
 {
-    /**
-     * Holds a clean instance of TestCaseWithMarkupAssertions.
-     *
-     * @var TestCaseWithMarkupAssertions
-     */
-    protected $testcase;
-
-    public function setUp()
-    {
-        $this->testcase = new TestCaseWithMarkupAssertions;
-    }
+    use MarkupAssertionsTrait;
 
     /**
-     * @dataProvider selectorVariantProvider()
+     * @test
+     * @testdox assertContainsSelector() should find matching selectors
+     * @dataProvider provideSelectorVariants
      */
-    public function testAssertContainsSelector($selector)
+    public function assertContainsSelector_should_find_matching_selectors($selector)
     {
-        $this->testcase->assertContainsSelector(
+        $this->assertContainsSelector(
             $selector,
             '<a href="https://example.com" id="my-link" class="link another-class">Example</a>'
         );
     }
 
-    public function testAssertContainsWithMultipleMatches()
+    /**
+     * @test
+     * @testdox assertContainsSelector() should pick up multiple instances of a selector
+     */
+    public function assertContainsSelector_should_pick_up_multiple_instances()
     {
-        $this->testcase->assertContainsSelector(
+        $this->assertContainsSelector(
             'a',
             '<a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact</a>'
         );
     }
 
     /**
-     * @dataProvider selectorVariantProvider()
+     * @test
+     * @testdox assertNotContainsSelector() should verify that the given selector does not exist
+     * @dataProvider provideSelectorVariants
      */
-    public function testAssertNotContainsSelector($selector)
+    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist($selector)
     {
-        $this->testcase->assertNotContainsSelector(
+        $this->assertNotContainsSelector(
             $selector,
             '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>'
         );
     }
 
-    public function testAssertSelectorCount()
+    /**
+     * @test
+     * @testdox assertSelectorCount() should count the instances of a selector
+     */
+    public function assertSelectorCount_should_count_the_number_of_instances()
     {
-        $this->testcase->assertSelectorCount(
+        $this->assertSelectorCount(
             3,
             'li',
             '<ul><li>1</li><li>2</li><li>3</li></ul>'
         );
     }
 
-    public function testAssertHasElementWithAttributes()
+    /**
+     * @test
+     * @testdox assertHasElementWithAttributes() should find an element with the given attributes
+     */
+    public function assertHasElementWithAttributes_should_find_elements_with_matching_attributes()
     {
-        $this->testcase->assertHasElementWithAttributes(
+        $this->assertHasElementWithAttributes(
             [
                 'type' => 'email',
                 'value' => 'test@example.com',
@@ -73,11 +81,13 @@ class MarkupAssertionsTraitTest extends TestCase
     }
 
     /**
-     * @link https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
+     * @test
+     * @testdox assertHasElementWithAttributes() should be able to parse spaces in attribute values
+     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
      */
-    public function testAssertHasElementWithAttributesWithSpacesInTheAttributeValue()
+    public function assertHasElementWithAttributes_should_be_able_to_handle_spaces()
     {
-        $this->testcase->assertHasElementWithAttributes(
+        $this->assertHasElementWithAttributes(
             [
                 'data-attr' => 'foo bar baz',
             ],
@@ -85,9 +95,13 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
-    public function testAssertNotHasElementWithAttributes()
+    /**
+     * @test
+     * @testdox assertNotHasElementWithAttributes() should ensure no element has the provided attributes
+     */
+    public function assertNotHasElementWithAttributes_should_find_no_elements_with_matching_attributes()
     {
-        $this->testcase->assertNotHasElementWithAttributes(
+        $this->assertNotHasElementWithAttributes(
             [
                 'type' => 'email',
                 'value' => 'test@example.com',
@@ -96,30 +110,42 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
-    public function testAssertElementContains()
+    /**
+     * @test
+     * @testdox assertElementContains() should be able to search for a selector
+     */
+    public function assertElementContains_can_match_a_selector()
     {
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main',
             '<header>Lorem ipsum</header><div id="main">Lorem ipsum</div>'
         );
     }
 
-    public function testAssertElementContainsMultipleSelectors()
+    /**
+     * @test
+     * @testdox assertElementContains() should be able to chain multiple selectors
+     */
+    public function assertElementContains_can_chain_multiple_selectors()
     {
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main .foo',
             '<div id="main"><span class="foo">Lorem ipsum</span></div>'
         );
     }
 
-    public function testAssertElementContainsScopesToSelector()
+    /**
+     * @test
+     * @testdox assertElementContains() should scope text to the selected element
+     */
+    public function assertElementContains_should_scope_matches_to_selector()
     {
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('The #main div does not contain the string "ipsum".');
 
-        $this->testcase->assertElementContains(
+        $this->assertElementContains(
             'ipsum',
             '#main',
             '<header>Lorem ipsum</header><div id="main">Foo bar baz</div>',
@@ -127,78 +153,102 @@ class MarkupAssertionsTraitTest extends TestCase
         );
     }
 
-    public function testAssertElementNotContains()
+    /**
+     * @test
+     * @testdox assertElementNotContains() should be able to search for a selector
+     */
+    public function assertElementNotContains_can_match_a_selector()
     {
-        $this->testcase->assertElementNotContains(
+        $this->assertElementNotContains(
             'ipsum',
             '#main',
             '<header>Foo bar baz</header><div id="main">Some string</div>'
         );
     }
 
-    public function testAssertElementRegExp()
+    /**
+     * @test
+     * @testdox assertElementRegExp() should use regular expression matching
+     */
+    public function assertElementRegExp_should_use_regular_expression_matching()
     {
-        $this->testcase->assertElementRegExp(
+        $this->assertElementRegExp(
             '/[A-Z0-9-]+/',
             '#main',
             '<header>Lorem ipsum</header><div id="main">ABC123</div>'
         );
     }
 
-    public function testAssertElementRegExpWithNestedElements()
+    /**
+     * @test
+     * @testdox assertElementRegExp() should be able to search for nested contents
+     */
+    public function assertElementRegExp_should_be_able_to_match_nested_contents()
     {
-        $this->testcase->assertElementRegExp(
+        $this->assertElementRegExp(
             '/[A-Z]+/',
             '#main',
             '<header>Lorem ipsum</header><div id="main"><span>ABC</span></div>'
         );
     }
 
+    /**
+     * @test
+     * @testdox assertElementNotRegExp() should use regular expression matching
+     */
     public function testAssertElementNotRegExp()
     {
-        $this->testcase->assertElementNotRegExp(
+        $this->assertElementNotRegExp(
             '/[0-9-]+/',
             '#main',
             '<header>Foo bar baz</header><div id="main">ABC</div>'
         );
     }
 
+
     /**
-     * @dataProvider attributeProvider()
+     * @test
+     * @testdox flattenAttributeArray() should flatten an array of attributes
+     * @dataProvider provideAttributes
      */
-    public function testFlattenAttributeArray($attributes, $expected)
+    public function flattenArrayAttribute_should_flatten_arrays_of_attributes($attributes, $expected)
     {
-        $method = new ReflectionMethod($this->testcase, 'flattenAttributeArray');
+        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invoke($this->testcase, $attributes));
+        $this->assertSame($expected, $method->invoke($this, $attributes));
     }
 
     /**
-     * @expectedException PHPUnit\Framework\RiskyTestError
+     * @test
+     * @testdox flattenAttributeArray() should throw a RiskyTestError if the array is empty
+     * @dataProvider provideAttributes
      */
-    public function testFlattenAttributeArrayThrowsRiskyTestError()
+    public function flattenAttributeArray_should_throw_a_RiskyTestError_if_given_an_empty_array()
     {
-        $method = new ReflectionMethod($this->testcase, 'flattenAttributeArray');
-        $method->setAccessible(true);
+        $this->expectException(RiskyTestError::class);
 
-        $method->invoke($this->testcase, []);
+        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
+        $method->setAccessible(true);
+        $method->invoke($this, []);
     }
 
     /**
-     * @dataProvider innerHtmlProvider().
+     * @test
+     * @testdox getInnerHtmlOfMatchedElements() should retrieve the inner HTML
+     * @dataProvider provideInnerHtml
      */
-    public function testGetInnerHtmlOfMatchedElements($markup, $selector, $expected) {
-        $method = new ReflectionMethod($this->testcase, 'getInnerHtmlOfMatchedElements');
+    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected) {
+        $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 
-        $this->assertEquals($expected, $method->invoke($this->testcase, $markup, $selector));
+        $this->assertEquals($expected, $method->invoke($this, $markup, $selector));
     }
 
     /**
      * Data provider for testFlattenAttributeArray().
      */
-    public function attributeProvider()
+    public function provideAttributes()
     {
         return [
             'Single attribute' => [
@@ -238,7 +288,7 @@ class MarkupAssertionsTraitTest extends TestCase
     /**
      * Data provider for testGetInnerHtmlOfMatchedElements().
      */
-    public function innerHtmlProvider()
+    public function provideInnerHtml()
     {
         return [
             'A single match' => [
@@ -262,7 +312,7 @@ class MarkupAssertionsTraitTest extends TestCase
     /**
      * Data provider for testAssertContainsSelector().
      */
-    public function selectorVariantProvider()
+    public function provideSelectorVariants()
     {
         return [
             'Simple tag name' => ['a'],

@@ -114,7 +114,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $output = '', $message = '')
     {
-        $this->assertContains(
+        $method = method_exists($this, 'assertStringContainsString')
+            ? 'assertStringContainsString'
+            : 'assertContains';
+
+        $this->$method(
             $contents,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
@@ -133,7 +137,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
     {
-        $this->assertNotContains(
+        $method = method_exists($this, 'assertStringNotContainsString')
+            ? 'assertStringNotContainsString'
+            : 'assertNotContains';
+
+        $this->$method(
             $contents,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
@@ -152,7 +160,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
     {
-        $this->assertRegExp(
+        $method = method_exists($this, 'assertMatchesRegularExpression')
+            ? 'assertMatchesRegularExpression'
+            : 'assertRegExp';
+
+        $this->$method(
             $regexp,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
@@ -171,7 +183,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
     {
-        $this->assertNotRegExp(
+        $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
+            ? 'assertDoesNotMatchRegularExpression'
+            : 'assertNotRegExp';
+
+        $this->$method(
             $regexp,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
