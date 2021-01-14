@@ -15,7 +15,8 @@
         "source": "https://github.com/stevegrunwell/phpunit-markup-assertions/"
     },
     "require": {
-        "laminas/laminas-dom": "^2.7.0|^2.8"
+        "php": "^5.6 || ^7.0 || ^8.0",
+        "laminas/laminas-dom": "~2.7.2 || ^2.8"
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^5.2"
@@ -44,9 +45,6 @@
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true,
-        "platform": {
-            "php": "7.4"
-        }
+        "sort-packages": true
     }
 }
