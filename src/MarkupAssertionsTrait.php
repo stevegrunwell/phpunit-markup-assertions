@@ -114,19 +114,15 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $output = '', $message = '')
     {
-        if (method_exists($this, 'assertStringContainsString')) {
-            $this->assertStringContainsString(
-                $contents,
-                $this->getInnerHtmlOfMatchedElements($output, $selector),
-                $message
-            );
-        } else {
-            $this->assertContains(
-                $contents,
-                $this->getInnerHtmlOfMatchedElements($output, $selector),
-                $message
-            );
-        }
+        $method = method_exists($this, 'assertStringContainsString')
+            ? 'assertStringContainsString'
+            : 'assertContains';
+
+        $this->$method(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
     }
 
     /**
@@ -141,20 +137,15 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
     {
-        if (method_exists($this, 'assertStringNotContainsString')) {
-            $this->assertStringNotContainsString(
-                $contents,
-                $this->getInnerHtmlOfMatchedElements($output, $selector),
-                $message
-            );
-        }
-        else {
-            $this->assertNotContains(
-                $contents,
-                $this->getInnerHtmlOfMatchedElements($output, $selector),
-                $message
-            );
-        }
+        $method = method_exists($this, 'assertStringNotContainsString')
+            ? 'assertStringNotContainsString'
+            : 'assertNotContains';
+
+        $this->$method(
+            $contents,
+            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $message
+        );
     }
 
     /**
