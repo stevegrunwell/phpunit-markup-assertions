@@ -169,7 +169,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
     {
-        $this->assertRegExp(
+        $method = method_exists($this, 'assertMatchesRegularExpression')
+            ? 'assertMatchesRegularExpression'
+            : 'assertRegExp';
+
+        $this->$method(
             $regexp,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
@@ -188,7 +192,11 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
     {
-        $this->assertNotRegExp(
+        $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
+            ? 'assertDoesNotMatchRegularExpression'
+            : 'assertNotRegExp';
+
+        $this->$method(
             $regexp,
             $this->getInnerHtmlOfMatchedElements($output, $selector),
             $message
