@@ -9,12 +9,12 @@
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
 use DOMDocument;
-use Laminas\Dom\Query;
+use Laminas\Dom\Document;
+use Laminas\Dom\Document\Query;
 use PHPUnit\Framework\RiskyTestError;
 
 trait MarkupAssertionsTrait
 {
-
     /**
      * Assert that the given string contains an element matching the given selector.
      *
@@ -23,6 +23,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertContainsSelector($selector, $output = '', $message = '')
     {
@@ -56,6 +58,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The markup to run the assertion against.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertSelectorCount($count, $selector, $output = '', $message = '')
     {
@@ -73,6 +77,8 @@ trait MarkupAssertionsTrait
      * @param string $output     The output that should contain an element with the
      *                           provided $attributes.
      * @param string $message    A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertHasElementWithAttributes($attributes = [], $output = '', $message = '')
     {
@@ -92,6 +98,8 @@ trait MarkupAssertionsTrait
      * @param string $output     The output that should not contain an element with the
      *                           provided $attributes.
      * @param string $message    A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertNotHasElementWithAttributes($attributes = [], $output = '', $message = '')
     {
@@ -111,6 +119,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertElementContains($contents, $selector = '', $output = '', $message = '')
     {
@@ -134,6 +144,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
     {
@@ -157,6 +169,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
     {
@@ -180,6 +194,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $output   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
     {
@@ -202,13 +218,11 @@ trait MarkupAssertionsTrait
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
      *
-     * @return NodeList
+     * @return \Laminas\Dom\Document\NodeList
      */
     protected function executeDomQuery($markup, $query)
     {
-        $dom = new Query($markup);
-
-        return $dom->execute($query);
+        return Query::execute($query, new Document($markup), Query::TYPE_CSS);
     }
 
     /**
@@ -257,7 +271,7 @@ trait MarkupAssertionsTrait
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
-            $document = new DOMDocument;
+            $document = new DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
             $contents[] = trim($document->saveHTML());
