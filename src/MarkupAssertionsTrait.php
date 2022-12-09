@@ -21,14 +21,14 @@ trait MarkupAssertionsTrait
      * @since 1.0.0
      *
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should contain the $selector.
+     * @param string $markup   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertContainsSelector($selector, $output = '', $message = '')
+    public function assertContainsSelector($selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($output, $selector);
+        $results = $this->executeDomQuery($markup, $selector);
 
         $this->assertGreaterThan(0, count($results), $message);
     }
@@ -39,12 +39,12 @@ trait MarkupAssertionsTrait
      * @since 1.0.0
      *
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should not contain the $selector.
+     * @param string $markup   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      */
-    public function assertNotContainsSelector($selector, $output = '', $message = '')
+    public function assertNotContainsSelector($selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($output, $selector);
+        $results = $this->executeDomQuery($markup, $selector);
 
         $this->assertEquals(0, count($results), $message);
     }
@@ -56,14 +56,14 @@ trait MarkupAssertionsTrait
      *
      * @param int    $count    The number of matching elements expected.
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The markup to run the assertion against.
+     * @param string $markup   The markup to run the assertion against.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertSelectorCount($count, $selector, $output = '', $message = '')
+    public function assertSelectorCount($count, $selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($output, $selector);
+        $results = $this->executeDomQuery($markup, $selector);
 
         $this->assertCount($count, $results, $message);
     }
@@ -74,17 +74,17 @@ trait MarkupAssertionsTrait
      * @since 1.0.0
      *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $output     The output that should contain an element with the
+     * @param string $markup     The output that should contain an element with the
      *                           provided $attributes.
      * @param string $message    A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertHasElementWithAttributes($attributes = [], $output = '', $message = '')
+    public function assertHasElementWithAttributes($attributes = [], $markup = '', $message = '')
     {
         $this->assertContainsSelector(
             '*' . $this->flattenAttributeArray($attributes),
-            $output,
+            $markup,
             $message
         );
     }
@@ -95,17 +95,17 @@ trait MarkupAssertionsTrait
      * @since 1.0.0
      *
      * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $output     The output that should not contain an element with the
+     * @param string $markup     The output that should not contain an element with the
      *                           provided $attributes.
      * @param string $message    A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertNotHasElementWithAttributes($attributes = [], $output = '', $message = '')
+    public function assertNotHasElementWithAttributes($attributes = [], $markup = '', $message = '')
     {
         $this->assertNotContainsSelector(
             '*' . $this->flattenAttributeArray($attributes),
-            $output,
+            $markup,
             $message
         );
     }
@@ -117,12 +117,12 @@ trait MarkupAssertionsTrait
      *
      * @param string $contents The string to look for within the DOM node's contents.
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should contain the $selector.
+     * @param string $markup   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementContains($contents, $selector = '', $output = '', $message = '')
+    public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
     {
         $method = method_exists($this, 'assertStringContainsString')
             ? 'assertStringContainsString'
@@ -130,7 +130,7 @@ trait MarkupAssertionsTrait
 
         $this->$method(
             $contents,
-            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
         );
     }
@@ -142,12 +142,12 @@ trait MarkupAssertionsTrait
      *
      * @param string $contents The string to look for within the DOM node's contents.
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should not contain the $selector.
+     * @param string $markup   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementNotContains($contents, $selector = '', $output = '', $message = '')
+    public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
     {
         $method = method_exists($this, 'assertStringNotContainsString')
             ? 'assertStringNotContainsString'
@@ -155,7 +155,7 @@ trait MarkupAssertionsTrait
 
         $this->$method(
             $contents,
-            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
         );
     }
@@ -167,12 +167,12 @@ trait MarkupAssertionsTrait
      *
      * @param string $regexp   The regular expression pattern to look for within the DOM node.
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should contain the $selector.
+     * @param string $markup   The output that should contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementRegExp($regexp, $selector = '', $output = '', $message = '')
+    public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
         $method = method_exists($this, 'assertMatchesRegularExpression')
             ? 'assertMatchesRegularExpression'
@@ -180,7 +180,7 @@ trait MarkupAssertionsTrait
 
         $this->$method(
             $regexp,
-            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
         );
     }
@@ -192,12 +192,12 @@ trait MarkupAssertionsTrait
      *
      * @param string $regexp   The regular expression pattern to look for within the DOM node.
      * @param string $selector A query selector for the element to find.
-     * @param string $output   The output that should not contain the $selector.
+     * @param string $markup   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementNotRegExp($regexp, $selector = '', $output = '', $message = '')
+    public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
         $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
             ? 'assertDoesNotMatchRegularExpression'
@@ -205,7 +205,7 @@ trait MarkupAssertionsTrait
 
         $this->$method(
             $regexp,
-            $this->getInnerHtmlOfMatchedElements($output, $selector),
+            $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
         );
     }
