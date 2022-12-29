@@ -155,6 +155,21 @@ class MarkupAssertionsTraitTest extends TestCase
 
     /**
      * @test
+     * @testdox assertElementContains() should handle various character sets
+     * @dataProvider provideGreetingsInDifferentLanguages
+     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
+     */
+    public function assertElementContains_should_handle_various_character_sets($greeting)
+    {
+        $this->assertElementContains(
+            $greeting,
+            'h1',
+            sprintf('<div><h1>%s</h1></div>', $greeting)
+        );
+    }
+
+    /**
+     * @test
      * @testdox assertElementNotContains() should be able to search for a selector
      */
     public function assertElementNotContains_can_match_a_selector()
@@ -162,7 +177,22 @@ class MarkupAssertionsTraitTest extends TestCase
         $this->assertElementNotContains(
             'ipsum',
             '#main',
-            '<header>Foo bar baz</header><div id="main">Some string</div>'
+            '<div>Foo bar baz</div><div id="main">Some string</div>'
+        );
+    }
+
+    /**
+     * @test
+     * @testdox assertElementNotContains() should handle various character sets
+     * @dataProvider provideGreetingsInDifferentLanguages
+     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
+     */
+    public function assertElementNotContains_should_handle_various_character_sets($greeting)
+    {
+        $this->assertElementNotContains(
+            $greeting,
+            'h1',
+            sprintf('<h1>Translation</h1><p>%s</p>', $greeting)
         );
     }
 
@@ -326,6 +356,25 @@ class MarkupAssertionsTraitTest extends TestCase
             'Tag name with class' => ['a.link'],
             'Tag name with ID' => ['a#my-link'],
             'Tag with href attribute' => ['a[href="https://example.com"]'],
+        ];
+    }
+
+    /**
+     * Provide a list of strings in various language.
+     *
+     * @return array<string,array<string>>
+     */
+    public function provideGreetingsInDifferentLanguages()
+    {
+        return [
+            'Arabic'    => ['مرحبا!'],
+            'Chinese'   => ['你好'],
+            'English'   => ['Hello'],
+            'Hebrew'    => ['שלום'],
+            'Japanese'  => ['こんにちは'],
+            'Korean'    => ['안녕하십니까'],
+            'Punjabi'   => ['ਸਤ ਸ੍ਰੀ ਅਕਾਲ'],
+            'Ukrainian' => ['Привіт'],
         ];
     }
 }
