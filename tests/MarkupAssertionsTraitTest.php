@@ -287,6 +287,8 @@ class MarkupAssertionsTraitTest extends TestCase
 
     /**
      * Data provider for testGetInnerHtmlOfMatchedElements().
+     *
+     * @return array<string,array<string>>
      */
     public function provideInnerHtml()
     {
@@ -311,6 +313,8 @@ class MarkupAssertionsTraitTest extends TestCase
 
     /**
      * Data provider for testAssertContainsSelector().
+     *
+     * @return array<string,array<string>>
      */
     public function provideSelectorVariants()
     {
