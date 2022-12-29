@@ -5,7 +5,7 @@
 
 This library introduces the `MarkupAssertionsTrait` trait for use in [PHPUnit](https://phpunit.de) tests.
 
-These assertions enable you to inspect generated markup without having to muddy tests with [`DOMDocument`](http://php.net/manual/en/class.domdocument.php) or nasty regular expressions. If you're generating markup at all with PHP, the PHPUnit Markup Assertions trait aims to make the output testable.
+These assertions enable you to inspect generated markup without having to muddy tests with [`DOMDocument`](http://php.net/manual/en/class.domdocument.php) or nasty regular expressions. If you're generating markup at all with PHP, the PHPUnit Markup Assertions trait aims to make the output testable without making your tests fragile.
 
 ## Example
 
@@ -22,10 +22,10 @@ class MyUnitTest extends TestCase
      */
     public function testRenderFormContainsInputs()
     {
-        $output = render_form();
+        $markup = render_form();
 
-        $this->assertContainsSelector('#first-name', $output);
-        $this->assertContainsSelector('#last-name', $output);
+        $this->assertContainsSelector('#first-name', $markup);
+        $this->assertContainsSelector('#last-name', $markup);
     }
 }
 ```
@@ -104,8 +104,8 @@ Assert that the given string contains an element matching the given selector.
 <dl>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -130,8 +130,8 @@ This method is the inverse of [`assertContainsSelector()`](#assertcontainsselect
 <dl>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should not contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should not contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -145,7 +145,7 @@ Assert the number of times an element matching the given selector is found.
     <dd>The number of matching elements expected.</dd>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
+    <dt>(string) $markup</dt>
     <dd>The markup to run the assertion against.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
@@ -171,8 +171,8 @@ Assert that an element with the given attributes exists in the given markup.
 <dl>
     <dt>(array) $attributes</dt>
     <dd>An array of HTML attributes that should be found on the element.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain an element with the provided <code>$attributes</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain an element with the provided <code>$attributes</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -203,8 +203,8 @@ Assert that an element with the given attributes does not exist in the given mar
 <dl>
     <dt>(array) $attributes</dt>
     <dd>An array of HTML attributes that should not be found on the element.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should not contain an element with the provided <code>$attributes</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should not contain an element with the provided <code>$attributes</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -218,8 +218,8 @@ Assert that the element with the given selector contains a string.
     <dd>The string to look for within the DOM node's contents.</dd>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -252,8 +252,8 @@ This method is the inverse of [`assertElementContains()`](#assertelementcontains
     <dd>The string to look for within the DOM node's contents.</dd>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -269,8 +269,8 @@ This method works just like [`assertElementContains()`](#assertelementcontains),
     <dd>The regular expression pattern to look for within the DOM node.</dd>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
@@ -286,8 +286,8 @@ This method is the inverse of [`assertElementRegExp()`](#assertelementregexp) an
     <dd>The regular expression pattern to look for within the DOM node.</dd>
     <dt>(string) $selector</dt>
     <dd>A query selector for the element to find.</dd>
-    <dt>(string) $output</dt>
-    <dd>The output that should contain the <code>$selector</code>.</dd>
+    <dt>(string) $markup</dt>
+    <dd>The markup that should contain the <code>$selector</code>.</dd>
     <dt>(string) $message</dt>
     <dd>A message to display if the assertion fails.</dd>
 </dl>
