@@ -222,7 +222,11 @@ trait MarkupAssertionsTrait
      */
     protected function executeDomQuery($markup, $query)
     {
-        return Query::execute($query, new Document($markup), Query::TYPE_CSS);
+        return Query::execute(
+            $query,
+            new Document('<?xml encoding="UTF-8">' . $markup, Document::DOC_HTML, 'UTF-8'),
+            Query::TYPE_CSS
+        );
     }
 
     /**
@@ -274,7 +278,7 @@ trait MarkupAssertionsTrait
             $document = new DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
-            $contents[] = trim($document->saveHTML());
+            $contents[] = trim(html_entity_decode($document->saveHTML()));
         }
 
         return implode(PHP_EOL, $contents);
