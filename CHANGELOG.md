@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] – 2022-12-28
+
+* Force UTF-8 encoding for better support for non-Latin character sets ([#35])
+* Move away from deprecated classes in laminas/laminas-dom ([#32])
+
 ## [1.3.1] — 2020-01-14
 
 * Fix PHPUnit warnings regarding `assertContains()` and `assertRegExp()`. Props [@jakobbuis](https://github.com/jakobbuis) ([#20], [#27], [#28])
@@ -35,7 +40,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * Initial release of the PHPUnit Markup Assertions Composer package.
 
 
-[Unreleased]: https://github.com/stevegrunwell/phpunit-markup-assertions/compare/master...develop
+[Unreleased]: https://github.com/stevegrunwell/phpunit-markup-assertions/compare/main...develop
+[1.4.0]: https://github.com/stevegrunwell/phpunit-markup-assertions/releases/tag/v1.4.0
 [1.3.1]: https://github.com/stevegrunwell/phpunit-markup-assertions/releases/tag/v1.3.1
 [1.3.0]: https://github.com/stevegrunwell/phpunit-markup-assertions/releases/tag/v1.3.0
 [1.2.0]: https://github.com/stevegrunwell/phpunit-markup-assertions/releases/tag/v1.2.0
@@ -53,3 +59,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [#26]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/26
 [#27]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/27
 [#28]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/28
+[#32]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/32
+[#35]: https://github.com/stevegrunwell/phpunit-markup-assertions/pull/35

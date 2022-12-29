@@ -19,7 +19,7 @@
         "laminas/laminas-dom": "~2.7.2 || ^2.8"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.2"
+        "symfony/phpunit-bridge": "^5.2 || ^6.2"
     },
     "autoload": {
         "psr-4": {
