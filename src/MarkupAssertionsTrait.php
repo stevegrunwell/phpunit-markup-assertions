@@ -41,6 +41,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $markup   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertNotContainsSelector($selector, $markup = '', $message = '')
     {
