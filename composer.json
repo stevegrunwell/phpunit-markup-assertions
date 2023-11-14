@@ -46,5 +46,13 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "archive": {
+        "exclude": [
+            "_config.yml",
+            ".*",
+            "phpunit.*",
+            "tests"
+        ]
     }
 }
