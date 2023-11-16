@@ -8,10 +8,8 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
-use DOMDocument;
-use Laminas\Dom\Document;
-use Laminas\Dom\Document\Query;
 use PHPUnit\Framework\RiskyTestError;
+use Symfony\Component\DomCrawler\Crawler;
 
 trait MarkupAssertionsTrait
 {
@@ -220,15 +218,13 @@ trait MarkupAssertionsTrait
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
      *
-     * @return \Laminas\Dom\Document\NodeList
+     * @return Crawler
      */
     protected function executeDomQuery($markup, $query)
     {
-        return Query::execute(
-            $query,
-            new Document('<?xml encoding="UTF-8">' . $markup, Document::DOC_HTML, 'UTF-8'),
-            Query::TYPE_CSS
-        );
+        $dom = new Crawler($markup);
+
+        return $dom->filter($query);
     }
 
     /**
@@ -277,7 +273,7 @@ trait MarkupAssertionsTrait
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
-            $document = new DOMDocument();
+            $document = new \DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
             $contents[] = trim(html_entity_decode($document->saveHTML()));
