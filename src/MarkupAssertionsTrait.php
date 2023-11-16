@@ -222,7 +222,7 @@ trait MarkupAssertionsTrait
      *
      * @return Crawler
      */
-    protected function executeDomQuery($markup, $query)
+    private function executeDomQuery($markup, $query)
     {
         $dom = new Crawler($markup);
 
@@ -240,7 +240,7 @@ trait MarkupAssertionsTrait
      *
      * @return string A XPath attribute query selector.
      */
-    protected function flattenAttributeArray(array $attributes)
+    private function flattenAttributeArray(array $attributes)
     {
         if (empty($attributes)) {
             throw new RiskyTestError('Attributes array is empty.');
@@ -268,7 +268,7 @@ trait MarkupAssertionsTrait
      *
      * @return string The concatenated innerHTML of any matched selectors.
      */
-    protected function getInnerHtmlOfMatchedElements($markup, $query)
+    private function getInnerHtmlOfMatchedElements($markup, $query)
     {
         $results  = $this->executeDomQuery($markup, $query);
         $contents = [];
