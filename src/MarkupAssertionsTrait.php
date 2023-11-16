@@ -73,10 +73,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should contain an element with the
+     *                                          provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -94,10 +95,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should not contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should not contain an element with
+     *                                          the provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -234,7 +236,7 @@ trait MarkupAssertionsTrait
      *
      * @throws RiskyTestError When the $attributes array is empty.
      *
-     * @param array $attributes HTML attributes and their values.
+     * @param array<string, scalar> $attributes HTML attributes and their values.
      *
      * @return string A XPath attribute query selector.
      */
