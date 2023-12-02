@@ -35,10 +35,14 @@
     "scripts": {
         "test": [
             "simple-phpunit --testdox"
+        ],
+        "test-coverage": [
+            "XDEBUG_MODE=coverage ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
         ]
     },
     "scripts-descriptions": {
-        "test": "Run all test suites."
+        "test": "Run all test suites.",
+        "test-coverage": "Generate code coverage reports in tests/coverage."
     },
     "config": {
         "preferred-install": "dist",
