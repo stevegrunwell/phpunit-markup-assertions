@@ -10,6 +10,7 @@
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
 use PHPUnit\Framework\RiskyTestError;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Exceptions\AttributeArrayException;
 use Symfony\Component\DomCrawler\Crawler;
 
 trait MarkupAssertionsTrait
@@ -240,23 +241,19 @@ trait MarkupAssertionsTrait
      * @param array<string, scalar> $attributes HTML attributes and their values.
      *
      * @return string A XPath attribute query selector.
+     *
+     * @deprecated since 2.0.0. Use the Selector object instead.
+     *             This method will be removed in a future release!
+     *
+     * @codeCoverageIgnore
      */
     private function flattenAttributeArray(array $attributes)
     {
-        if (empty($attributes)) {
-            throw new RiskyTestError('Attributes array is empty.');
+        try {
+            return (new Selector($attributes))->getValue();
+        } catch (AttributeArrayException $e) {
+            throw new RiskyTestError($e->getMessage(), $e->getCode(), $e);
         }
-
-        array_walk($attributes, function (&$value, $key) {
-            // Boolean attributes.
-            if (null === $value) {
-                $value = sprintf('[%s]', $key);
-            } else {
-                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
-            }
-        });
-
-        return implode('', $attributes);
     }
 
     /**

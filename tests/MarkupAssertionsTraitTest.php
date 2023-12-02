@@ -236,23 +236,11 @@ class MarkupAssertionsTraitTest extends TestCase
     }
 
 
-    /**
-     * @test
-     * @testdox flattenAttributeArray() should flatten an array of attributes
-     * @dataProvider provideAttributes
-     */
-    public function flattenArrayAttribute_should_flatten_arrays_of_attributes($attributes, $expected)
-    {
-        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
-        $method->setAccessible(true);
 
-        $this->assertSame($expected, $method->invoke($this, $attributes));
-    }
 
     /**
      * @test
      * @testdox flattenAttributeArray() should throw a RiskyTestError if the array is empty
-     * @dataProvider provideAttributes
      */
     public function flattenAttributeArray_should_throw_a_RiskyTestError_if_given_an_empty_array()
     {
@@ -276,45 +264,7 @@ class MarkupAssertionsTraitTest extends TestCase
         $this->assertEquals($expected, $method->invoke($this, $markup, $selector));
     }
 
-    /**
-     * Data provider for testFlattenAttributeArray().
-     */
-    public function provideAttributes()
-    {
-        return [
-            'Single attribute' => [
-                [
-                    'id' => 'first-name',
-                ],
-                '[id="first-name"]',
-            ],
-            'Multiple attributes' => [
-                [
-                    'id' => 'first-name',
-                    'value' => 'Ringo',
-                ],
-                '[id="first-name"][value="Ringo"]',
-            ],
-            'Boolean attribute' => [
-                [
-                    'checked' => null,
-                ],
-                '[checked]',
-            ],
-            'Data attribute' => [
-                [
-                    'data-foo' => 'bar',
-                ],
-                '[data-foo="bar"]',
-            ],
-            'Value contains quotes' => [
-                [
-                    'name' => 'Austin "Danger" Powers',
-                ],
-                '[name="Austin &quot;Danger&quot; Powers"]',
-            ],
-        ];
-    }
+
 
     /**
      * Data provider for testGetInnerHtmlOfMatchedElements().
