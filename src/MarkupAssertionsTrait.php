@@ -8,10 +8,8 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
-use DOMDocument;
-use Laminas\Dom\Document;
-use Laminas\Dom\Document\Query;
 use PHPUnit\Framework\RiskyTestError;
+use Symfony\Component\DomCrawler\Crawler;
 
 trait MarkupAssertionsTrait
 {
@@ -75,10 +73,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should contain an element with the
+     *                                          provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -96,10 +95,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should not contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should not contain an element with
+     *                                          the provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -220,15 +220,13 @@ trait MarkupAssertionsTrait
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
      *
-     * @return \Laminas\Dom\Document\NodeList
+     * @return Crawler
      */
-    protected function executeDomQuery($markup, $query)
+    private function executeDomQuery($markup, $query)
     {
-        return Query::execute(
-            $query,
-            new Document('<?xml encoding="UTF-8">' . $markup, Document::DOC_HTML, 'UTF-8'),
-            Query::TYPE_CSS
-        );
+        $dom = new Crawler($markup);
+
+        return $dom->filter($query);
     }
 
     /**
@@ -238,11 +236,11 @@ trait MarkupAssertionsTrait
      *
      * @throws RiskyTestError When the $attributes array is empty.
      *
-     * @param array $attributes HTML attributes and their values.
+     * @param array<string, scalar> $attributes HTML attributes and their values.
      *
      * @return string A XPath attribute query selector.
      */
-    protected function flattenAttributeArray(array $attributes)
+    private function flattenAttributeArray(array $attributes)
     {
         if (empty($attributes)) {
             throw new RiskyTestError('Attributes array is empty.');
@@ -270,14 +268,14 @@ trait MarkupAssertionsTrait
      *
      * @return string The concatenated innerHTML of any matched selectors.
      */
-    protected function getInnerHtmlOfMatchedElements($markup, $query)
+    private function getInnerHtmlOfMatchedElements($markup, $query)
     {
         $results  = $this->executeDomQuery($markup, $query);
         $contents = [];
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
-            $document = new DOMDocument();
+            $document = new \DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
             $contents[] = trim(html_entity_decode($document->saveHTML()));
