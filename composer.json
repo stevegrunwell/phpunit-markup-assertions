@@ -35,14 +35,10 @@
     "scripts": {
         "test": [
             "simple-phpunit --testdox"
-        ],
-        "test-coverage": [
-            "phpdbg -qrr -d memory_limit=-1 ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
         ]
     },
     "scripts-descriptions": {
-        "test": "Run all test suites.",
-        "test-coverage": "Generate code coverage reports in tests/coverage."
+        "test": "Run all test suites."
     },
     "config": {
         "preferred-install": "dist",
