@@ -128,7 +128,7 @@ trait MarkupAssertionsTrait
     {
         $method = method_exists($this, 'assertStringContainsString')
             ? 'assertStringContainsString'
-            : 'assertContains';
+            : 'assertContains'; // @codeCoverageIgnore
 
         $this->$method(
             $contents,
@@ -153,7 +153,7 @@ trait MarkupAssertionsTrait
     {
         $method = method_exists($this, 'assertStringNotContainsString')
             ? 'assertStringNotContainsString'
-            : 'assertNotContains';
+            : 'assertNotContains'; // @codeCoverageIgnore
 
         $this->$method(
             $contents,
@@ -178,7 +178,7 @@ trait MarkupAssertionsTrait
     {
         $method = method_exists($this, 'assertMatchesRegularExpression')
             ? 'assertMatchesRegularExpression'
-            : 'assertRegExp';
+            : 'assertRegExp'; // @codeCoverageIgnore
 
         $this->$method(
             $regexp,
@@ -203,7 +203,7 @@ trait MarkupAssertionsTrait
     {
         $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
             ? 'assertDoesNotMatchRegularExpression'
-            : 'assertNotRegExp';
+            : 'assertNotRegExp'; // @codeCoverageIgnore
 
         $this->$method(
             $regexp,

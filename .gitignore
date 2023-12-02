@@ -1,8 +1,8 @@
 *.DS_Store
-tests/coverage
-vendor
 .phpunit.result.cache
 .vscode
+tests/coverage
+vendor
 
 # The composer.lock file is not needed, as this is a library whose dependencies
 # will depend on the version of PHP being used.
