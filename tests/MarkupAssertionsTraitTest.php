@@ -268,7 +268,8 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox getInnerHtmlOfMatchedElements() should retrieve the inner HTML
      * @dataProvider provideInnerHtml
      */
-    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected) {
+    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected)
+    {
         $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 

@@ -20,6 +20,9 @@
         "symfony/dom-crawler": "^3.4|^4.4|^5.4|^6.0"
     },
     "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpcsstandards/php_codesniffer": "^3.7",
         "symfony/phpunit-bridge": "^5.2 || ^6.2"
     },
     "autoload": {
@@ -33,6 +36,9 @@
         }
     },
     "scripts": {
+        "coding-standards": [
+            "phpcs"
+        ],
         "test": [
             "simple-phpunit --testdox"
         ],
@@ -41,12 +47,16 @@
         ]
     },
     "scripts-descriptions": {
+        "coding-standards": "Check coding standards.",
         "test": "Run all test suites.",
         "test-coverage": "Generate code coverage reports in tests/coverage."
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "archive": {
         "exclude": [
