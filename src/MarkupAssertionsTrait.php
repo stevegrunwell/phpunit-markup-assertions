@@ -9,7 +9,11 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
+use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\RiskyTestError;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ContainsSelector;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ElementContainsString;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\SelectorCount;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Exceptions\AttributeArrayException;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -28,9 +32,9 @@ trait MarkupAssertionsTrait
      */
     public function assertContainsSelector($selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($markup, $selector);
+        $constraint = new ContainsSelector(new Selector($selector));
 
-        $this->assertGreaterThan(0, count($results), $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -46,9 +50,9 @@ trait MarkupAssertionsTrait
      */
     public function assertNotContainsSelector($selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($markup, $selector);
+        $constraint = new LogicalNot(new ContainsSelector(new Selector($selector)));
 
-        $this->assertEquals(0, count($results), $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -65,9 +69,9 @@ trait MarkupAssertionsTrait
      */
     public function assertSelectorCount($count, $selector, $markup = '', $message = '')
     {
-        $results = $this->executeDomQuery($markup, $selector);
+        $constraint = new SelectorCount(new Selector($selector), $count);
 
-        $this->assertCount($count, $results, $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -85,11 +89,9 @@ trait MarkupAssertionsTrait
      */
     public function assertHasElementWithAttributes($attributes = [], $markup = '', $message = '')
     {
-        $this->assertContainsSelector(
-            '*' . $this->flattenAttributeArray($attributes),
-            $markup,
-            $message
-        );
+        $constraint = new ContainsSelector(new Selector($attributes));
+
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -107,11 +109,9 @@ trait MarkupAssertionsTrait
      */
     public function assertNotHasElementWithAttributes($attributes = [], $markup = '', $message = '')
     {
-        $this->assertNotContainsSelector(
-            '*' . $this->flattenAttributeArray($attributes),
-            $markup,
-            $message
-        );
+        $constraint = new LogicalNot(new ContainsSelector(new Selector($attributes)));
+
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -128,15 +128,9 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringContainsString')
-            ? 'assertStringContainsString'
-            : 'assertContains'; // @codeCoverageIgnore
+        $constraint = new ElementContainsString(new Selector($selector), $contents);
 
-        $this->$method(
-            $contents,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -153,15 +147,9 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringNotContainsString')
-            ? 'assertStringNotContainsString'
-            : 'assertNotContains'; // @codeCoverageIgnore
+        $constraint = new LogicalNot(new ElementContainsString(new Selector($selector), $contents));
 
-        $this->$method(
-            $contents,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -223,12 +211,15 @@ trait MarkupAssertionsTrait
      * @param string $query  The DOM selector query.
      *
      * @return Crawler
+     *
+     * @deprecated since 2.0.0. Use {@see DOM::query()} instead.
+     *             This method will be removed in a future release!
+     *
+     * @codeCoverageIgnore
      */
     private function executeDomQuery($markup, $query)
     {
-        $dom = new Crawler($markup);
-
-        return $dom->filter($query);
+        return (new DOM($markup))->query(new Selector($query));
     }
 
     /**
@@ -265,20 +256,14 @@ trait MarkupAssertionsTrait
      * @param string $query  The DOM selector query.
      *
      * @return string The concatenated innerHTML of any matched selectors.
+     *
+     * @deprecated since 2.0.0. SOME OTHER ALTERNATIVE
+     *             This method will be removed in a future release!
+     *
+     * @codeCoverageIgnore
      */
     private function getInnerHtmlOfMatchedElements($markup, $query)
     {
-        $results  = $this->executeDomQuery($markup, $query);
-        $contents = [];
-
-        // Loop through results and collect their innerHTML values.
-        foreach ($results as $result) {
-            $document = new \DOMDocument();
-            $document->appendChild($document->importNode($result->firstChild, true));
-
-            $contents[] = trim(html_entity_decode($document->saveHTML()));
-        }
-
-        return implode(PHP_EOL, $contents);
+        return implode(PHP_EOL, (new DOM($markup))->getInnerHtml(new Selector($query)));
     }
 }
