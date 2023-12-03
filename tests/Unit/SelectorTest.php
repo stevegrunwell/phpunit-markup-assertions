@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Exceptions\AttributeArrayException;

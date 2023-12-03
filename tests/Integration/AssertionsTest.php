@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Integration;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\RiskyTestError;
@@ -8,6 +8,12 @@ use PHPUnit\Framework\TestCase;
 use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 
 /**
+ * This integration test covers the actual assertion methods defined in the MarkupAssertionsTrait.
+ *
+ * The majority of testing for the internals can be found in the {@see tests/Unit} test suite.
+ *
+ * @testdox MarkupAssertionsTrait
+ *
  * @covers SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait
  */
 class MarkupAssertionsTraitTest extends TestCase
@@ -233,22 +239,6 @@ class MarkupAssertionsTraitTest extends TestCase
             '#main',
             '<header>Foo bar baz</header><div id="main">ABC</div>'
         );
-    }
-
-
-
-
-    /**
-     * @test
-     * @testdox flattenAttributeArray() should throw a RiskyTestError if the array is empty
-     */
-    public function flattenAttributeArray_should_throw_a_RiskyTestError_if_given_an_empty_array()
-    {
-        $this->expectException(RiskyTestError::class);
-
-        $method = new \ReflectionMethod($this, 'flattenAttributeArray');
-        $method->setAccessible(true);
-        $method->invoke($this, []);
     }
 
     /**
