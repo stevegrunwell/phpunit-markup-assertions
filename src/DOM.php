@@ -53,6 +53,21 @@ class DOM
     }
 
     /**
+     * Retrieve the inner contents of elements matching the given selector.
+     *
+     * @param Selector $selector The query selector.
+     *
+     * @return array<string> The inner contents of the matched selector. Each match is a separate
+     *                       value in the array.
+     */
+    public function getOuterHtml(Selector $selector)
+    {
+        return $this->query($selector)->each(function ($element) {
+            return $element->outerHtml();
+        });
+    }
+
+    /**
      * @param Selector $selector The query selector.
      *
      * @return Crawler A filtered version of $this->crawler.
