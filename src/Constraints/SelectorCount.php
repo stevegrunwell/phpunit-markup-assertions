@@ -6,6 +6,9 @@ use PHPUnit\Framework\Constraint\Constraint;
 use SteveGrunwell\PHPUnit_Markup_Assertions\DOM;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
 
+/**
+ * Evaluate how many times a selector appears within some markup.
+ */
 class SelectorCount extends Constraint
 {
     /**
@@ -22,7 +25,7 @@ class SelectorCount extends Constraint
      * @param Selector $selector The query selector.
      * @param int      $count    The expected number of matches.
      */
-    public function __construct(Selector $selector, $count)
+    public function __construct(Selector $selector, int $count)
     {
         $this->selector = $selector;
         $this->count = $count;
@@ -50,9 +53,9 @@ class SelectorCount extends Constraint
      *
      * @return bool
      */
-    protected function matches($value): bool
+    protected function matches($html): bool
     {
-        $dom = new DOM($value);
+        $dom = new DOM($html);
 
         return $dom->countInstancesOfSelector($this->selector) === $this->count;
     }

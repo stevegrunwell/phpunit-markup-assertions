@@ -10,6 +10,8 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
  * @testdox Constraints\ContainsSelector
  *
  * @covers SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ContainsSelector
+ *
+ * @group Constraints
  */
 class ContainsSelectorTest extends TestCase
 {
@@ -42,12 +44,12 @@ class ContainsSelectorTest extends TestCase
      */
     public function it_should_fail_with_a_useful_error_message()
     {
-        $selector = new Selector('p.body');
+        $selector = new Selector('p');
         $html = '<h1>Some Title</h1>';
 
         try {
             (new ContainsSelector($selector))->evaluate($html);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->assertSame(
                 "Failed asserting that '{$html}' contains selector '{$selector}'.",
                 $e->getMessage()
@@ -61,7 +63,7 @@ class ContainsSelectorTest extends TestCase
     /**
      * Data provider for testAssertContainsSelector().
      *
-     * @return Iterable<string,array<string>>
+     * @return iterable<string,array<string>>
      */
     public function provideSelectorVariants()
     {

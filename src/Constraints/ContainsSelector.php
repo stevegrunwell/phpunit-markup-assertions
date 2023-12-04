@@ -6,6 +6,9 @@ use PHPUnit\Framework\Constraint\Constraint;
 use SteveGrunwell\PHPUnit_Markup_Assertions\DOM;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
 
+/**
+ * Evaluate whether or not markup contains at least one instance of the given selector.
+ */
 class ContainsSelector extends Constraint
 {
     /**
@@ -32,16 +35,15 @@ class ContainsSelector extends Constraint
     }
 
     /**
-     * Evaluates the constraint for parameter $other. Returns true if the
-     * constraint is met, false otherwise.
+     * {@inheritDoc}
      *
-     * @param mixed $other value or object to evaluate
+     * @param mixed $html The HTML to evaluate.
      *
      * @return bool
      */
-    protected function matches($value): bool
+    protected function matches($html): bool
     {
-        $dom = new DOM($value);
+        $dom = new DOM($html);
 
         return $dom->countInstancesOfSelector($this->selector) > 0;
     }

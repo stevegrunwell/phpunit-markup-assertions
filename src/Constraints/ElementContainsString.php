@@ -6,8 +6,23 @@ use PHPUnit\Framework\Constraint\Constraint;
 use SteveGrunwell\PHPUnit_Markup_Assertions\DOM;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
 
+/**
+ * Evaluate whether or not the element(s) matching the given selector contain a given string.
+ */
 class ElementContainsString extends Constraint
 {
+    /**
+     * A cache of matches that we have checked against.
+     *
+     * @var array<string>
+     */
+    protected $matchingElements = [];
+
+    /**
+     * @var Selector
+     */
+    protected $selector;
+
     /**
      * @var bool
      */
@@ -17,11 +32,6 @@ class ElementContainsString extends Constraint
      * @var string
      */
     private $needle;
-
-    /**
-     * @var Selector
-     */
-    private $selector;
 
     /**
      * @param Selector $selector    The query selector.
@@ -44,39 +54,80 @@ class ElementContainsString extends Constraint
     public function toString(): string
     {
         return sprintf(
-            'contains string %s',
+            '%s string %s',
+            count($this->matchingElements) >= 2 ? 'contain' : 'contains',
             $this->exporter()->export($this->needle)
+        );
+    }
+
+    /**
+     * Return additional failure description where needed.
+     *
+     * The function can be overridden to provide additional failure
+     * information like a diff
+     *
+     * @param mixed $other evaluated value or object
+     */
+    protected function additionalFailureDescription($other): string
+    {
+        if (empty($this->matchingElements)) {
+            return '';
+        }
+
+        return sprintf(
+            "%s\n%s",
+            count($this->matchingElements) >= 2 ? 'Matching elements:' : 'Matching element:',
+            $this->exportMatchesArray($this->matchingElements)
+        );
+    }
+
+    /**
+     * Export an array of DOM matches for a selector.
+     *
+     * @param array<string> $matches
+     *
+     * @return string
+     */
+    protected function exportMatchesArray(array $matches): string
+    {
+        return '[' . PHP_EOL . '    ' . implode(PHP_EOL . '    ', $matches) . PHP_EOL . ']';
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param mixed $html The evaluated markup. Will not actually be used, instead replaced with
+     *                    {@see $this->matches}.
+     *
+     * @return string
+     */
+    protected function failureDescription($html): string
+    {
+        if (empty($this->matchingElements)) {
+            return "any elements match selector '{$this->selector->getValue()}'";
+        }
+
+        $label = count($this->matchingElements) >= 2
+            ? 'any elements matching selector %s %s'
+            : 'element matching selector %s %s';
+
+        return sprintf(
+            $label,
+            $this->exporter()->export($this->selector->getValue()),
+            $this->toString()
         );
     }
 
     /**
      * {@inheritDoc}
      *
-     * @param mixed $other evaluated value or object
-     *
-     * @return string
-     */
-    protected function failureDescription($other): string
-    {
-        return sprintf(
-            'element with selector %s in %s %s',
-            $this->exporter()->export($this->selector->getValue()),
-            $this->exporter()->export($other),
-            $this->toString()
-        );
-    }
-
-    /**
-     * Evaluates the constraint for parameter $other. Returns true if the
-     * constraint is met, false otherwise.
-     *
-     * @param mixed $other value or object to evaluate
+     * @param mixed $html The HTML to match against.
      *
      * @return bool
      */
-    protected function matches($value): bool
+    protected function matches($html): bool
     {
-        $dom = new DOM($value);
+        $dom = new DOM($html);
         $fn = $this->ignore_case ? 'stripos' : 'strpos';
 
         // Iterate through each matching element and look for the text.
@@ -85,6 +136,9 @@ class ElementContainsString extends Constraint
                 return true;
             }
         }
+
+        // Query again to get the outer elements for error reporting.
+        $this->matchingElements = $dom->getOuterHtml($this->selector);
 
         return false;
     }

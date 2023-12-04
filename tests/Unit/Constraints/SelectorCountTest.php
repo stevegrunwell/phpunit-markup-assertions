@@ -3,7 +3,6 @@
 namespace Tests\Unit\Constraints;
 
 use PHPUnit\Framework\TestCase;
-use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ContainsSelector;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\SelectorCount;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
 
@@ -11,6 +10,8 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
  * @testdox Constraints\SelectorCount
  *
  * @covers SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\SelectorCount
+ *
+ * @group Constraints
  */
 class SelectorCountTest extends TestCase
 {
@@ -19,13 +20,25 @@ class SelectorCountTest extends TestCase
      * @dataProvider provideMarkupVariants
      */
     public function it_should_determine_if_the_expected_number_of_instances_are_present(
-        $markup,
+        string $markup,
         Selector $selector,
-        $expected
+        int $expected
     ) {
         $constraint = new SelectorCount($selector, $expected);
 
         $this->assertTrue($constraint->evaluate($markup, '', true));
+    }
+
+    /**
+     * @test
+     * @dataProvider provideMarkupVariants
+     */
+    public function it_should_fail_if_it_contains_a_different_number_of_matches()
+    {
+        $markup = '<p>This is the only paragraph</p>';
+
+        $this->assertFalse((new SelectorCount(new Selector('p'), 0))->evaluate($markup, '', true));
+        $this->assertFalse((new SelectorCount(new Selector('p'), 2))->evaluate($markup, '', true));
     }
 
     /**
@@ -38,7 +51,7 @@ class SelectorCountTest extends TestCase
 
         try {
             (new SelectorCount($selector, 5))->evaluate($html);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->assertSame(
                 "Failed asserting that '{$html}' contains 5 instance(s) of selector '{$selector}'.",
                 $e->getMessage()
@@ -52,7 +65,7 @@ class SelectorCountTest extends TestCase
     /**
      * Data provider for testAssertContainsSelector().
      *
-     * @return Iterable<string,array{string, Selector, int}>
+     * @return iterable<string,array{string, Selector, int}>
      */
     public function provideMarkupVariants()
     {
