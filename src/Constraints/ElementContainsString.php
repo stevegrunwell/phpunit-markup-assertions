@@ -90,6 +90,8 @@ class ElementContainsString extends Constraint
      */
     protected function exportMatchesArray(array $matches): string
     {
+        $matches = array_map('trim', $matches);
+
         return '[' . PHP_EOL . '    ' . implode(PHP_EOL . '    ', $matches) . PHP_EOL . ']';
     }
 

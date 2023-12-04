@@ -38,7 +38,7 @@ class Selector
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getValue();
     }
@@ -48,7 +48,7 @@ class Selector
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->selector;
     }
@@ -61,7 +61,7 @@ class Selector
      *
      * @return string The flattened attribute array.
      */
-    private function attributeArrayToString($attributes)
+    private function attributeArrayToString(array $attributes): string
     {
         if (empty($attributes)) {
             throw new AttributeArrayException('Attributes array is empty.');

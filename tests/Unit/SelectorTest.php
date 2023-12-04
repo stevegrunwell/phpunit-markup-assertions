@@ -26,13 +26,32 @@ final class SelectorTest extends TestCase
     /**
      * @test
      *
+     * @param array<string, scalar> $attributes
+     * @param string                $expected
+     *
      * @dataProvider provideAttributes
      */
-    public function it_should_automatically_convert_attribute_arrays_to_strings($attributes, $expected)
-    {
+    public function it_should_automatically_convert_attribute_arrays_to_strings(
+        array $attributes,
+        string $expected
+    ) {
         $selector = new Selector($attributes);
 
         $this->assertSame($expected, $selector->getValue());
+    }
+
+    /**
+     * @test
+     *
+     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
+     */
+    public function it_should_be_able_to_handle_spaces_in_attribute_values()
+    {
+        $selector = new Selector([
+            'data-attr' => 'foo bar baz',
+        ]);
+
+        $this->assertSame('*[data-attr="foo bar baz"]', $selector->getValue());
     }
 
     /**
@@ -58,7 +77,7 @@ final class SelectorTest extends TestCase
     /**
      * Data provider for testFlattenAttributeArray().
      *
-     * @return Iterable{array<string, scalar>, string} The attribute array and teh expected string.
+     * @return iterable<string, array{array<string, ?scalar>, string}> The attribute array and the expected string.
      */
     public function provideAttributes()
     {

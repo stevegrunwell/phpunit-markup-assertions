@@ -19,7 +19,7 @@ final class DOMTest extends TestCase
      *
      * @dataProvider provideMarkupWithInnerClass
      */
-    public function it_should_be_able_to_count_selectors($markup, $expected)
+    public function it_should_be_able_to_count_selectors(string $markup, int $expected)
     {
         $dom = new DOM($markup);
         $selector = new Selector('.inner');
@@ -63,7 +63,7 @@ HTML;
         $this->assertEmpty($dom->getInnerHtml(new Selector('h2')));
     }
 
-        /**
+    /**
      * @test
      * @testdox getOuterHtml() should retrieve the outer HTML for each matching element.
      */
@@ -121,7 +121,7 @@ HTML;
     /**
      * Return test cases with varying numbers of .inner elements.
      *
-     * @return Iterable<string, array{string, int}>
+     * @return iterable<string, array{string, int}>
      */
     public function provideMarkupWithInnerClass()
     {

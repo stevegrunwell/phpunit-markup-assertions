@@ -72,7 +72,7 @@ class ElementContainsStringTest extends TestCase
      *
      * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
      */
-    public function it_should_be_able_to_handle_various_character_sets($greeting)
+    public function it_should_be_able_to_handle_various_character_sets(string $greeting)
     {
         $constraint = new ElementContainsString(new Selector('h1'), $greeting);
         $html = sprintf('<div><h1>%s</h1></div>', $greeting);
@@ -164,7 +164,7 @@ MSG;
     /**
      * Provide a list of strings in various language.
      *
-     * @return Iterable<string,array<string>>
+     * @return iterable<string,array<string>>
      */
     public function provideGreetingsInDifferentLanguages()
     {

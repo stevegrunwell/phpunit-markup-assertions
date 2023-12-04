@@ -19,7 +19,7 @@ class ContainsSelectorTest extends TestCase
      * @test
      * @dataProvider provideSelectorVariants
      */
-    public function it_should_find_matching_selectors_in_content($selector)
+    public function it_should_find_matching_selectors_in_content(string $selector)
     {
         $constraint = new ContainsSelector(new Selector($selector));
         $html = '<a href="https://example.com" id="my-link" class="link another-class">Example</a>';
@@ -31,7 +31,7 @@ class ContainsSelectorTest extends TestCase
      * @test
      * @dataProvider provideSelectorVariants
      */
-    public function it_should_not_find_unmatched_selectors_in_content($selector)
+    public function it_should_not_find_unmatched_selectors_in_content(string $selector)
     {
         $constraint = new ContainsSelector(new Selector($selector));
         $html = '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>';
