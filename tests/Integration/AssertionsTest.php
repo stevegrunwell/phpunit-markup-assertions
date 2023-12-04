@@ -2,8 +2,6 @@
 
 namespace Tests\Integration;
 
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\RiskyTestError;
 use PHPUnit\Framework\TestCase;
 use SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait;
 
@@ -21,301 +19,81 @@ class MarkupAssertionsTraitTest extends TestCase
     use MarkupAssertionsTrait;
 
     /**
-     * @test
-     * @testdox assertContainsSelector() should find matching selectors
-     * @dataProvider provideSelectorVariants
+     * @var string
      */
-    public function assertContainsSelector_should_find_matching_selectors($selector)
-    {
-        $this->assertContainsSelector(
-            $selector,
-            '<a href="https://example.com" id="my-link" class="link another-class">Example</a>'
-        );
-    }
+    private $markup = <<<'HTML'
+<main>
+    <h1>Good news, everyone!</h1>
+    <p><a href="https://example.com" class="link">According to the latest reports</a>,
+    you can still test markup with PHPUnit_Markup_Assertions!</p>
+    <p>#TestEverything</p>
+</main>
+HTML;
 
-    /**
-     * @test
-     * @testdox assertContainsSelector() should pick up multiple instances of a selector
-     */
-    public function assertContainsSelector_should_pick_up_multiple_instances()
+    public function testPresenceOfSelectors()
     {
-        $this->assertContainsSelector(
-            'a',
-            '<a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact</a>'
-        );
-    }
+        $this->assertContainsSelector('main', $this->markup);
+        $this->assertContainsSelector('h1', $this->markup);
+        $this->assertContainsSelector('a.link', $this->markup);
+        $this->assertContainsSelector('main p', $this->markup);
+        $this->assertContainsSelector('h1 + p', $this->markup);
+        $this->assertContainsSelector('p > a', $this->markup);
+        $this->assertContainsSelector('a[href$="example.com"]', $this->markup);
 
-    /**
-     * @test
-     * @testdox assertNotContainsSelector() should verify that the given selector does not exist
-     * @dataProvider provideSelectorVariants
-     */
-    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist($selector)
-    {
-        $this->assertNotContainsSelector(
-            $selector,
-            '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>'
-        );
-    }
+        $this->assertNotContainsSelector('h2', $this->markup);
+        $this->assertNotContainsSelector('a[href="https://example.org"]', $this->markup);
+        $this->assertNotContainsSelector('p main', $this->markup);
 
-    /**
-     * @test
-     * @testdox assertSelectorCount() should count the instances of a selector
-     */
-    public function assertSelectorCount_should_count_the_number_of_instances()
-    {
-        $this->assertSelectorCount(
-            3,
-            'li',
-            '<ul><li>1</li><li>2</li><li>3</li></ul>'
-        );
-    }
+        $this->assertSelectorCount(0, 'h2', $this->markup);
+        $this->assertSelectorCount(1, 'h1', $this->markup);
+        $this->assertSelectorCount(2, 'p', $this->markup);
 
-    /**
-     * @test
-     * @testdox assertHasElementWithAttributes() should find an element with the given attributes
-     */
-    public function assertHasElementWithAttributes_should_find_elements_with_matching_attributes()
-    {
-        $this->assertHasElementWithAttributes(
-            [
-                'type' => 'email',
-                'value' => 'test@example.com',
-            ],
-            '<label>Email</label><br><input type="email" value="test@example.com" />'
-        );
-    }
+        $this->assertHasElementWithAttributes(['href' => 'https://example.com'], $this->markup);
 
-    /**
-     * @test
-     * @testdox assertHasElementWithAttributes() should be able to parse spaces in attribute values
-     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
-     */
-    public function assertHasElementWithAttributes_should_be_able_to_handle_spaces()
-    {
-        $this->assertHasElementWithAttributes(
-            [
-                'data-attr' => 'foo bar baz',
-            ],
-            '<div data-attr="foo bar baz">Contents</div>'
-        );
-    }
-
-    /**
-     * @test
-     * @testdox assertNotHasElementWithAttributes() should ensure no element has the provided attributes
-     */
-    public function assertNotHasElementWithAttributes_should_find_no_elements_with_matching_attributes()
-    {
         $this->assertNotHasElementWithAttributes(
-            [
-                'type' => 'email',
-                'value' => 'test@example.com',
-            ],
-            '<label>City</label><br><input type="text" value="New York" data-foo="bar" />'
+            ['href' => 'https://example.org'],
+            $this->markup,
+            'URL uses .com, not .org.'
         );
     }
 
-    /**
-     * @test
-     * @testdox assertElementContains() should be able to search for a selector
-     */
-    public function assertElementContains_can_match_a_selector()
+    public function testMatchingContentsOfSelectors()
     {
-        $this->assertElementContains(
-            'ipsum',
-            '#main',
-            '<header>Lorem ipsum</header><div id="main">Lorem ipsum</div>'
-        );
-    }
+        $this->assertElementContains('Good news', 'main', $this->markup);
+        $this->assertElementContains('Good news', 'h1', $this->markup);
+        $this->assertElementContains('#TestEverything', 'p', $this->markup);
+        $this->assertElementContains('class="link"', 'p', $this->markup);
+        $this->assertElementContains('#TestEverything', 'main *:last-child', $this->markup);
 
-    /**
-     * @test
-     * @testdox assertElementContains() should be able to chain multiple selectors
-     */
-    public function assertElementContains_can_chain_multiple_selectors()
-    {
-        $this->assertElementContains(
-            'ipsum',
-            '#main .foo',
-            '<div id="main"><span class="foo">Lorem ipsum</span></div>'
-        );
-    }
-
-    /**
-     * @test
-     * @testdox assertElementContains() should scope text to the selected element
-     */
-    public function assertElementContains_should_scope_matches_to_selector()
-    {
-        $this->expectException(AssertionFailedError::class);
-        $this->expectExceptionMessage('The #main div does not contain the string "ipsum".');
-
-        $this->assertElementContains(
-            'ipsum',
-            '#main',
-            '<header>Lorem ipsum</header><div id="main">Foo bar baz</div>',
-            'The #main div does not contain the string "ipsum".'
-        );
-    }
-
-    /**
-     * @test
-     * @testdox assertElementContains() should handle various character sets
-     * @dataProvider provideGreetingsInDifferentLanguages
-     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
-     */
-    public function assertElementContains_should_handle_various_character_sets($greeting)
-    {
-        $this->assertElementContains(
-            $greeting,
-            'h1',
-            sprintf('<div><h1>%s</h1></div>', $greeting)
-        );
-    }
-
-    /**
-     * @test
-     * @testdox assertElementNotContains() should be able to search for a selector
-     */
-    public function assertElementNotContains_can_match_a_selector()
-    {
+        $this->assertElementNotContains('good news', 'h1', $this->markup, 'Case-sensitive by default.');
         $this->assertElementNotContains(
-            'ipsum',
-            '#main',
-            '<div>Foo bar baz</div><div id="main">Some string</div>'
+            '#TestEverything',
+            'p:first-child',
+            $this->markup,
+            '#TestEverything is in the second paragraph'
         );
-    }
-
-    /**
-     * @test
-     * @testdox assertElementNotContains() should handle various character sets
-     * @dataProvider provideGreetingsInDifferentLanguages
-     * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
-     */
-    public function assertElementNotContains_should_handle_various_character_sets($greeting)
-    {
         $this->assertElementNotContains(
-            $greeting,
-            'h1',
-            sprintf('<h1>Translation</h1><p>%s</p>', $greeting)
+            'class="link"',
+            'a',
+            $this->markup,
+            'The class is part of the outer, not inner HTML'
         );
-    }
 
-    /**
-     * @test
-     * @testdox assertElementRegExp() should use regular expression matching
-     */
-    public function assertElementRegExp_should_use_regular_expression_matching()
-    {
-        $this->assertElementRegExp(
-            '/[A-Z0-9-]+/',
-            '#main',
-            '<header>Lorem ipsum</header><div id="main">ABC123</div>'
-        );
-    }
+        $this->assertElementRegExp('/\w+ news/', 'h1', $this->markup);
+        $this->assertElementRegExp('/GOOD NEWS/i', 'h1', $this->markup);
+        $this->assertElementRegExp('/latest reports/', 'p > a', $this->markup);
 
-    /**
-     * @test
-     * @testdox assertElementRegExp() should be able to search for nested contents
-     */
-    public function assertElementRegExp_should_be_able_to_match_nested_contents()
-    {
-        $this->assertElementRegExp(
-            '/[A-Z]+/',
-            '#main',
-            '<header>Lorem ipsum</header><div id="main"><span>ABC</span></div>'
-        );
-    }
-
-    /**
-     * @test
-     * @testdox assertElementNotRegExp() should use regular expression matching
-     */
-    public function testAssertElementNotRegExp()
-    {
         $this->assertElementNotRegExp(
-            '/[0-9-]+/',
-            '#main',
-            '<header>Foo bar baz</header><div id="main">ABC</div>'
+            '/\w+ news/',
+            'p',
+            $this->markup,
+            'This text is in the heading, not the paragraph.'
         );
-    }
-
-    /**
-     * @test
-     * @testdox getInnerHtmlOfMatchedElements() should retrieve the inner HTML
-     * @dataProvider provideInnerHtml
-     */
-    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected)
-    {
-        $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
-        $method->setAccessible(true);
-
-        $this->assertEquals($expected, $method->invoke($this, $markup, $selector));
-    }
-
-
-
-    /**
-     * Data provider for testGetInnerHtmlOfMatchedElements().
-     *
-     * @return array<string,array<string>>
-     */
-    public function provideInnerHtml()
-    {
-        return [
-            'A single match' => [
-                '<body>Foo bar baz</body>',
-                'body',
-                'Foo bar baz',
-            ],
-            'Multiple matching elements' => [
-                '<ul><li>Foo</li><li>Bar</li><li>Baz</li>',
-                'li',
-                'Foo' . PHP_EOL . 'Bar' . PHP_EOL . 'Baz',
-            ],
-            'Nested elements' => [
-                '<h1><a href="https://example.com">Example site</a></h1>',
-                'h1',
-                '<a href="https://example.com">Example site</a>',
-            ],
-        ];
-    }
-
-    /**
-     * Data provider for testAssertContainsSelector().
-     *
-     * @return array<string,array<string>>
-     */
-    public function provideSelectorVariants()
-    {
-        return [
-            'Simple tag name' => ['a'],
-            'Class name' => ['.link'],
-            'Multiple class names' => ['.link.another-class'],
-            'Element ID' => ['#my-link'],
-            'Tag name with class' => ['a.link'],
-            'Tag name with ID' => ['a#my-link'],
-            'Tag with href attribute' => ['a[href="https://example.com"]'],
-        ];
-    }
-
-    /**
-     * Provide a list of strings in various language.
-     *
-     * @return array<string,array<string>>
-     */
-    public function provideGreetingsInDifferentLanguages()
-    {
-        return [
-            'Arabic'    => ['مرحبا!'],
-            'Chinese'   => ['你好'],
-            'English'   => ['Hello'],
-            'Hebrew'    => ['שלום'],
-            'Japanese'  => ['こんにちは'],
-            'Korean'    => ['안녕하십니까'],
-            'Punjabi'   => ['ਸਤ ਸ੍ਰੀ ਅਕਾਲ'],
-            'Ukrainian' => ['Привіт'],
-        ];
+        $this->assertElementNotRegExp(
+            '/#TESTEVERYTHING/',
+            'p',
+            $this->markup,
+            'No case-insensitive flag'
+        );
     }
 }

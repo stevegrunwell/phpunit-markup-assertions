@@ -10,12 +10,10 @@
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
 use PHPUnit\Framework\Constraint\LogicalNot;
-use PHPUnit\Framework\RiskyTestError;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ContainsSelector;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ElementContainsString;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ElementMatchesRegExp;
 use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\SelectorCount;
-use SteveGrunwell\PHPUnit_Markup_Assertions\Exceptions\AttributeArrayException;
-use Symfony\Component\DomCrawler\Crawler;
 
 trait MarkupAssertionsTrait
 {
@@ -166,15 +164,9 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertMatchesRegularExpression')
-            ? 'assertMatchesRegularExpression'
-            : 'assertRegExp'; // @codeCoverageIgnore
+        $constraint = new ElementMatchesRegExp(new Selector($selector), $regexp);
 
-        $this->$method(
-            $regexp,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -191,79 +183,8 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
-            ? 'assertDoesNotMatchRegularExpression'
-            : 'assertNotRegExp'; // @codeCoverageIgnore
+        $constraint = new LogicalNot(new ElementMatchesRegExp(new Selector($selector), $regexp));
 
-        $this->$method(
-            $regexp,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
-    }
-
-    /**
-     * Build a new DOMDocument from the given markup, then execute a query against it.
-     *
-     * @since 1.0.0
-     *
-     * @param string $markup The HTML for the DOMDocument.
-     * @param string $query  The DOM selector query.
-     *
-     * @return Crawler
-     *
-     * @deprecated since 2.0.0. Use {@see DOM::query()} instead.
-     *             This method will be removed in a future release!
-     *
-     * @codeCoverageIgnore
-     */
-    private function executeDomQuery($markup, $query)
-    {
-        return (new DOM($markup))->query(new Selector($query));
-    }
-
-    /**
-     * Given an array of HTML attributes, flatten them into a XPath attribute selector.
-     *
-     * @since 1.0.0
-     *
-     * @throws RiskyTestError When the $attributes array is empty.
-     *
-     * @param array<string, scalar> $attributes HTML attributes and their values.
-     *
-     * @return string A XPath attribute query selector.
-     *
-     * @deprecated since 2.0.0. Use the Selector object instead.
-     *             This method will be removed in a future release!
-     *
-     * @codeCoverageIgnore
-     */
-    private function flattenAttributeArray(array $attributes)
-    {
-        try {
-            return (new Selector($attributes))->getValue();
-        } catch (AttributeArrayException $e) {
-            throw new RiskyTestError($e->getMessage(), $e->getCode(), $e);
-        }
-    }
-
-    /**
-     * Given HTML markup and a DOM selector query, collect the innerHTML of the matched selectors.
-     *
-     * @since 1.1.0
-     *
-     * @param string $markup The HTML for the DOMDocument.
-     * @param string $query  The DOM selector query.
-     *
-     * @return string The concatenated innerHTML of any matched selectors.
-     *
-     * @deprecated since 2.0.0. SOME OTHER ALTERNATIVE
-     *             This method will be removed in a future release!
-     *
-     * @codeCoverageIgnore
-     */
-    private function getInnerHtmlOfMatchedElements($markup, $query)
-    {
-        return implode(PHP_EOL, (new DOM($markup))->getInnerHtml(new Selector($query)));
+        static::assertThat($markup, $constraint, $message);
     }
 }
