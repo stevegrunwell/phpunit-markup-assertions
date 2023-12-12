@@ -5,3 +5,5 @@ parameters:
 		- tests
 	excludePaths:
 		- tests/coverage
+	ignoreErrors:
+		- '#Method Tests\\.+ has no return type specified.#'
