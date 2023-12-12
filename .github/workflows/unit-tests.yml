@@ -19,6 +19,9 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: none
 
+      - name: Remove PHPStan as a dependency
+        run: composer remove --dev phpstan/phpstan
+
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
