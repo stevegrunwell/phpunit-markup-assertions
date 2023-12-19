@@ -63,7 +63,20 @@ class DOM
     public function getOuterHtml(Selector $selector)
     {
         return $this->query($selector)->each(function ($element) {
-            return $element->outerHtml();
+
+            /*
+             * The outerHtml() method was added in Symfony 4.4, which supports PHP 7.1.3+.
+             *
+             * @link https://symfony.com/blog/new-in-symfony-4-4-new-domcrawler-methods
+             */
+            if (method_exists($element, 'outerHtml')) {
+                return $element->outerHtml();
+            }
+
+            // Fallback for PHP 7.0.
+            $node = $element->getNode(0);
+
+            return $node->ownerDocument->saveHtml($node);
         });
     }
 
