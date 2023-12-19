@@ -9,8 +9,11 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
-use PHPUnit\Framework\RiskyTestError;
-use Symfony\Component\DomCrawler\Crawler;
+use PHPUnit\Framework\Constraint\LogicalNot;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ContainsSelector;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ElementContainsString;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\ElementMatchesRegExp;
+use SteveGrunwell\PHPUnit_Markup_Assertions\Constraints\SelectorCount;
 
 trait MarkupAssertionsTrait
 {
@@ -19,17 +22,20 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertContainsSelector($selector, $markup = '', $message = '')
-    {
-        $results = $this->executeDomQuery($markup, $selector);
+    public function assertContainsSelector(
+        $selector,
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new ContainsSelector(new Selector($selector));
 
-        $this->assertGreaterThan(0, count($results), $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -37,17 +43,20 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should not contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should not contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertNotContainsSelector($selector, $markup = '', $message = '')
-    {
-        $results = $this->executeDomQuery($markup, $selector);
+    public function assertNotContainsSelector(
+        $selector,
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new LogicalNot(new ContainsSelector(new Selector($selector)));
 
-        $this->assertEquals(0, count($results), $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -55,18 +64,22 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param int    $count    The number of matching elements expected.
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The markup to run the assertion against.
-     * @param string $message  A message to display if the assertion fails.
+     * @param int                          $count    The number of matching elements expected.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The markup to run the assertion against.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertSelectorCount($count, $selector, $markup = '', $message = '')
-    {
-        $results = $this->executeDomQuery($markup, $selector);
+    public function assertSelectorCount(
+        int $count,
+        $selector,
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new SelectorCount(new Selector($selector), $count);
 
-        $this->assertCount($count, $results, $message);
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -82,13 +95,14 @@ trait MarkupAssertionsTrait
      *
      * @return void
      */
-    public function assertHasElementWithAttributes($attributes = [], $markup = '', $message = '')
-    {
-        $this->assertContainsSelector(
-            '*' . $this->flattenAttributeArray($attributes),
-            $markup,
-            $message
-        );
+    public function assertHasElementWithAttributes(
+        array $attributes = [],
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new ContainsSelector(new Selector($attributes));
+
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -104,13 +118,14 @@ trait MarkupAssertionsTrait
      *
      * @return void
      */
-    public function assertNotHasElementWithAttributes($attributes = [], $markup = '', $message = '')
-    {
-        $this->assertNotContainsSelector(
-            '*' . $this->flattenAttributeArray($attributes),
-            $markup,
-            $message
-        );
+    public function assertNotHasElementWithAttributes(
+        $attributes = [],
+        $markup = '',
+        $message = ''
+    ) {
+        $constraint = new LogicalNot(new ContainsSelector(new Selector($attributes)));
+
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -118,24 +133,22 @@ trait MarkupAssertionsTrait
      *
      * @since 1.1.0
      *
-     * @param string $contents The string to look for within the DOM node's contents.
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string                       $contents The string to look for within the DOM node's contents.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
-    {
-        $method = method_exists($this, 'assertStringContainsString')
-            ? 'assertStringContainsString'
-            : 'assertContains'; // @codeCoverageIgnore
+    public function assertElementContains(
+        string $contents,
+        $selector = '',
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new ElementContainsString(new Selector($selector), $contents);
 
-        $this->$method(
-            $contents,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -143,24 +156,22 @@ trait MarkupAssertionsTrait
      *
      * @since 1.1.0
      *
-     * @param string $contents The string to look for within the DOM node's contents.
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should not contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string                       $contents The string to look for within the DOM node's contents.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should not contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
-    {
-        $method = method_exists($this, 'assertStringNotContainsString')
-            ? 'assertStringNotContainsString'
-            : 'assertNotContains'; // @codeCoverageIgnore
+    public function assertElementNotContains(
+        string $contents,
+        $selector = '',
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new LogicalNot(new ElementContainsString(new Selector($selector), $contents));
 
-        $this->$method(
-            $contents,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -168,24 +179,22 @@ trait MarkupAssertionsTrait
      *
      * @since 1.1.0
      *
-     * @param string $regexp   The regular expression pattern to look for within the DOM node.
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string                       $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
-    {
-        $method = method_exists($this, 'assertMatchesRegularExpression')
-            ? 'assertMatchesRegularExpression'
-            : 'assertRegExp'; // @codeCoverageIgnore
+    public function assertElementRegExp(
+        string $regexp,
+        $selector = '',
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new ElementMatchesRegExp(new Selector($selector), $regexp);
 
-        $this->$method(
-            $regexp,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
+        static::assertThat($markup, $constraint, $message);
     }
 
     /**
@@ -193,95 +202,21 @@ trait MarkupAssertionsTrait
      *
      * @since 1.1.0
      *
-     * @param string $regexp   The regular expression pattern to look for within the DOM node.
-     * @param string $selector A query selector for the element to find.
-     * @param string $markup   The output that should not contain the $selector.
-     * @param string $message  A message to display if the assertion fails.
+     * @param string                       $regexp   The regular expression pattern to look for within the DOM node.
+     * @param string|array<string, scalar> $selector A query selector to search for.
+     * @param string                       $markup   The output that should not contain the $selector.
+     * @param string                       $message  A message to display if the assertion fails.
      *
      * @return void
      */
-    public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
-    {
-        $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
-            ? 'assertDoesNotMatchRegularExpression'
-            : 'assertNotRegExp'; // @codeCoverageIgnore
+    public function assertElementNotRegExp(
+        string $regexp,
+        $selector = '',
+        string $markup = '',
+        string $message = ''
+    ) {
+        $constraint = new LogicalNot(new ElementMatchesRegExp(new Selector($selector), $regexp));
 
-        $this->$method(
-            $regexp,
-            $this->getInnerHtmlOfMatchedElements($markup, $selector),
-            $message
-        );
-    }
-
-    /**
-     * Build a new DOMDocument from the given markup, then execute a query against it.
-     *
-     * @since 1.0.0
-     *
-     * @param string $markup The HTML for the DOMDocument.
-     * @param string $query  The DOM selector query.
-     *
-     * @return Crawler
-     */
-    private function executeDomQuery($markup, $query)
-    {
-        $dom = new Crawler($markup);
-
-        return $dom->filter($query);
-    }
-
-    /**
-     * Given an array of HTML attributes, flatten them into a XPath attribute selector.
-     *
-     * @since 1.0.0
-     *
-     * @throws RiskyTestError When the $attributes array is empty.
-     *
-     * @param array<string, scalar> $attributes HTML attributes and their values.
-     *
-     * @return string A XPath attribute query selector.
-     */
-    private function flattenAttributeArray(array $attributes)
-    {
-        if (empty($attributes)) {
-            throw new RiskyTestError('Attributes array is empty.');
-        }
-
-        array_walk($attributes, function (&$value, $key) {
-            // Boolean attributes.
-            if (null === $value) {
-                $value = sprintf('[%s]', $key);
-            } else {
-                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
-            }
-        });
-
-        return implode('', $attributes);
-    }
-
-    /**
-     * Given HTML markup and a DOM selector query, collect the innerHTML of the matched selectors.
-     *
-     * @since 1.1.0
-     *
-     * @param string $markup The HTML for the DOMDocument.
-     * @param string $query  The DOM selector query.
-     *
-     * @return string The concatenated innerHTML of any matched selectors.
-     */
-    private function getInnerHtmlOfMatchedElements($markup, $query)
-    {
-        $results  = $this->executeDomQuery($markup, $query);
-        $contents = [];
-
-        // Loop through results and collect their innerHTML values.
-        foreach ($results as $result) {
-            $document = new \DOMDocument();
-            $document->appendChild($document->importNode($result->firstChild, true));
-
-            $contents[] = trim(html_entity_decode($document->saveHTML()));
-        }
-
-        return implode(PHP_EOL, $contents);
+        static::assertThat($markup, $constraint, $message);
     }
 }

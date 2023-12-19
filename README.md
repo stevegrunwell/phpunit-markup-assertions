@@ -36,7 +36,13 @@ class MyUnitTest extends TestCase
 To add PHPUnit Markup Assertions to your project, first install the library via Composer:
 
 ```sh
-$ composer require --dev stevegrunwell/phpunit-markup-assertions
+composer require --dev stevegrunwell/phpunit-markup-assertions
+```
+
+Please note that if you need to execute these against a PHP 5.6 codebase, you'll need to use version 1.x:
+
+```sh
+composer require --dev stevegrunwell/phpunit-markup-assertions:^1.0
 ```
 
 Next, import the `SteveGrunwell\PHPUnit_Markup_Assertions\MarkupAssertionsTrait` trait into each test case that will leverage the assertions:
