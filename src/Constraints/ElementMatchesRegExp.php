@@ -23,6 +23,8 @@ class ElementMatchesRegExp extends ElementContainsString
      */
     public function __construct(Selector $selector, string $pattern)
     {
+        parent::__construct($selector, '');
+
         $this->selector = $selector;
         $this->pattern = $pattern;
     }
@@ -37,7 +39,7 @@ class ElementMatchesRegExp extends ElementContainsString
         return sprintf(
             '%s regular expression %s',
             count($this->matchingElements) >= 2 ? 'match' : 'matches',
-            $this->exporter()->export($this->pattern)
+            $this->exportValue($this->pattern)
         );
     }
 

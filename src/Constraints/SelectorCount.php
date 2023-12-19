@@ -11,6 +11,8 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
  */
 class SelectorCount extends Constraint
 {
+    use ExporterTrait;
+
     /**
      * @var int
      */
@@ -27,6 +29,8 @@ class SelectorCount extends Constraint
      */
     public function __construct(Selector $selector, int $count)
     {
+        parent::__construct();
+
         $this->selector = $selector;
         $this->count = $count;
     }
@@ -41,7 +45,7 @@ class SelectorCount extends Constraint
         return sprintf(
             'contains %d instance(s) of selector %s',
             $this->count,
-            $this->exporter()->export($this->selector->getValue())
+            $this->exportValue($this->selector->getValue())
         );
     }
 

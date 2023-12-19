@@ -11,6 +11,8 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
  */
 class ElementContainsString extends Constraint
 {
+    use ExporterTrait;
+
     /**
      * A cache of matches that we have checked against.
      *
@@ -41,6 +43,8 @@ class ElementContainsString extends Constraint
      */
     public function __construct(Selector $selector, $needle, $ignore_case = false)
     {
+        parent::__construct();
+
         $this->selector = $selector;
         $this->needle = $needle;
         $this->ignore_case = $ignore_case;
@@ -56,7 +60,7 @@ class ElementContainsString extends Constraint
         return sprintf(
             '%s string %s',
             count($this->matchingElements) >= 2 ? 'contain' : 'contains',
-            $this->exporter()->export($this->needle)
+            $this->exportValue($this->needle)
         );
     }
 
@@ -115,7 +119,7 @@ class ElementContainsString extends Constraint
 
         return sprintf(
             $label,
-            $this->exporter()->export($this->selector->getValue()),
+            $this->exportValue($this->selector->getValue()),
             $this->toString()
         );
     }

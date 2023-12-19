@@ -11,6 +11,8 @@ use SteveGrunwell\PHPUnit_Markup_Assertions\Selector;
  */
 class ContainsSelector extends Constraint
 {
+    use ExporterTrait;
+
     /**
      * @var Selector
      */
@@ -21,6 +23,8 @@ class ContainsSelector extends Constraint
      */
     public function __construct(Selector $selector)
     {
+        parent::__construct();
+
         $this->selector = $selector;
     }
 
@@ -31,7 +35,7 @@ class ContainsSelector extends Constraint
      */
     public function toString(): string
     {
-        return 'contains selector ' . $this->exporter()->export($this->selector->getValue());
+        return 'contains selector ' . $this->exportValue($this->selector->getValue());
     }
 
     /**
