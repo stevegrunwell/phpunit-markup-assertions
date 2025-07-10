@@ -246,7 +246,7 @@ trait MarkupAssertionsTrait
             if (empty($value)) {
                 $value = sprintf('[%s]', $key);
             } else {
-                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
+                $value = sprintf('[%s="%s"]', $key, htmlspecialchars((string) $value));
             }
         });
 
@@ -270,10 +270,14 @@ trait MarkupAssertionsTrait
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
+            if (!isset($result->firstChild)) {
+                continue;
+            }
+
             $document = new \DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
-            $contents[] = trim(html_entity_decode($document->saveHTML()));
+            $contents[] = trim(html_entity_decode((string) $document->saveHTML()));
         }
 
         return implode(PHP_EOL, $contents);
