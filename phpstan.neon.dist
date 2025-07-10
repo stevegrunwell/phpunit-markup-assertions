@@ -8,7 +8,7 @@ parameters:
 
 	# Don't worry about the coverage reports
 	excludePaths:
-		- tests/coverage
+		- tests/coverage (?)
 
 	# PHPUnit Bridge puts the PHPUnit source in an unconventional location
 	scanDirectories:
