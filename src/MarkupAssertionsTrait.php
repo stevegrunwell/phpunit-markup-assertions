@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Markup assertions for PHPUnit.
  *
@@ -8,10 +9,8 @@
 
 namespace SteveGrunwell\PHPUnit_Markup_Assertions;
 
-use DOMDocument;
-use Laminas\Dom\Document;
-use Laminas\Dom\Document\Query;
 use PHPUnit\Framework\RiskyTestError;
+use Symfony\Component\DomCrawler\Crawler;
 
 trait MarkupAssertionsTrait
 {
@@ -41,6 +40,8 @@ trait MarkupAssertionsTrait
      * @param string $selector A query selector for the element to find.
      * @param string $markup   The output that should not contain the $selector.
      * @param string $message  A message to display if the assertion fails.
+     *
+     * @return void
      */
     public function assertNotContainsSelector($selector, $markup = '', $message = '')
     {
@@ -73,10 +74,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should contain an element with the
+     *                                          provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -94,10 +96,11 @@ trait MarkupAssertionsTrait
      *
      * @since 1.0.0
      *
-     * @param array  $attributes An array of HTML attributes that should be found on the element.
-     * @param string $markup     The output that should not contain an element with the
-     *                           provided $attributes.
-     * @param string $message    A message to display if the assertion fails.
+     * @param array<string, scalar> $attributes An array of HTML attributes that should be found
+     *                                          on the element.
+     * @param string                $markup     The output that should not contain an element with
+     *                                          the provided $attributes.
+     * @param string                $message    A message to display if the assertion fails.
      *
      * @return void
      */
@@ -124,11 +127,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringContainsString')
-            ? 'assertStringContainsString'
-            : 'assertContains';
-
-        $this->$method(
+        $this->assertStringContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -149,11 +148,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringNotContainsString')
-            ? 'assertStringNotContainsString'
-            : 'assertNotContains';
-
-        $this->$method(
+        $this->assertStringNotContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -174,9 +169,10 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertMatchesRegularExpression')
             ? 'assertMatchesRegularExpression'
-            : 'assertRegExp';
+            : 'assertRegExp'; // @codeCoverageIgnore
 
         $this->$method(
             $regexp,
@@ -199,9 +195,10 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
             ? 'assertDoesNotMatchRegularExpression'
-            : 'assertNotRegExp';
+            : 'assertNotRegExp'; // @codeCoverageIgnore
 
         $this->$method(
             $regexp,
@@ -218,15 +215,13 @@ trait MarkupAssertionsTrait
      * @param string $markup The HTML for the DOMDocument.
      * @param string $query  The DOM selector query.
      *
-     * @return \Laminas\Dom\Document\NodeList
+     * @return Crawler
      */
-    protected function executeDomQuery($markup, $query)
+    private function executeDomQuery($markup, $query)
     {
-        return Query::execute(
-            $query,
-            new Document('<?xml encoding="UTF-8">' . $markup, Document::DOC_HTML, 'UTF-8'),
-            Query::TYPE_CSS
-        );
+        $dom = new Crawler($markup);
+
+        return $dom->filter($query);
     }
 
     /**
@@ -236,11 +231,11 @@ trait MarkupAssertionsTrait
      *
      * @throws RiskyTestError When the $attributes array is empty.
      *
-     * @param array $attributes HTML attributes and their values.
+     * @param array<string, scalar> $attributes HTML attributes and their values.
      *
      * @return string A XPath attribute query selector.
      */
-    protected function flattenAttributeArray(array $attributes)
+    private function flattenAttributeArray(array $attributes)
     {
         if (empty($attributes)) {
             throw new RiskyTestError('Attributes array is empty.');
@@ -248,10 +243,10 @@ trait MarkupAssertionsTrait
 
         array_walk($attributes, function (&$value, $key) {
             // Boolean attributes.
-            if (null === $value) {
+            if (empty($value)) {
                 $value = sprintf('[%s]', $key);
             } else {
-                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
+                $value = sprintf('[%s="%s"]', $key, htmlspecialchars((string) $value));
             }
         });
 
@@ -268,17 +263,21 @@ trait MarkupAssertionsTrait
      *
      * @return string The concatenated innerHTML of any matched selectors.
      */
-    protected function getInnerHtmlOfMatchedElements($markup, $query)
+    private function getInnerHtmlOfMatchedElements($markup, $query)
     {
         $results  = $this->executeDomQuery($markup, $query);
         $contents = [];
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
-            $document = new DOMDocument();
+            if (!isset($result->firstChild)) {
+                continue;
+            }
+
+            $document = new \DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
-            $contents[] = trim(html_entity_decode($document->saveHTML()));
+            $contents[] = trim(html_entity_decode((string) $document->saveHTML()));
         }
 
         return implode(PHP_EOL, $contents);

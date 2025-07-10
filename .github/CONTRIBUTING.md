@@ -44,7 +44,7 @@ This project uses [the PSR-2 coding standards](http://www.php-fig.org/psr/psr-2/
 [PHPUnit](https://phpunit.de/) is included as a development dependency, and should be run regularly. When submitting changes, please be sure to add or update unit tests accordingly. You may run unit tests at any time by running:
 
 ```bash
-$ ./vendor/bin/phpunit
+$ composer test
 ```
 
 #### Code coverage

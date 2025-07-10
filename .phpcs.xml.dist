@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="Custom ruleset">
+    <description>Coding standards for PHPUnit Markup Assertions</description>
+
+    <!-- Show progress and sniff codes in all reports -->
+	<arg value="ps"/>
+
+    <!-- Check all PHP files in directory tree by default. -->
+	<arg name="extensions" value="php"/>
+	<file>.</file>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!-- Default to PSR-12 for coding standards-->
+    <rule ref="PSR12"/>
+
+    <!-- The tests/ directory may use snake_case for test methods -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!-- Ensure we're compatible with PHP 7.1+ -->
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.1-"/>
+</ruleset>

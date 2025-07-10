@@ -1,0 +1,35 @@
+name: Code Coverage
+
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  coverage:
+    name: Report code coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: xdebug
+
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+
+      - name: Run test suite
+        run: vendor/bin/simple-phpunit --coverage-text --coverage-clover=tests/coverage
+
+      - name: Publish to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          files: tests/coverage
+          format: clover
+          fail-on-error: false

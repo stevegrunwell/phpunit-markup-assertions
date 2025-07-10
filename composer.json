@@ -15,11 +15,16 @@
         "source": "https://github.com/stevegrunwell/phpunit-markup-assertions/"
     },
     "require": {
-        "php": "^5.6 || ^7.0 || ^8.0",
-        "laminas/laminas-dom": "~2.7.2 || ^2.8"
+        "php": "^7.1 || ^8.0",
+        "symfony/css-selector": "^4.4|^5.4|^6.0|^7.0",
+        "symfony/dom-crawler": "^4.4|^5.4|^6.0|^7.0"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.2 || ^6.2"
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpstan/phpstan": "^2.1",
+        "squizlabs/php_codesniffer": "^3.7",
+        "symfony/phpunit-bridge": "^5.2 || ^6.2 || ^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -32,19 +37,38 @@
         }
     },
     "scripts": {
+        "coding-standards": [
+            "phpcs"
+        ],
+        "static-analysis": [
+            "phpstan analyse"
+        ],
         "test": [
             "simple-phpunit --testdox"
         ],
         "test-coverage": [
-            "phpdbg -qrr -d memory_limit=-1 ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
+            "XDEBUG_MODE=coverage ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
         ]
     },
     "scripts-descriptions": {
+        "coding-standards": "Check coding standards.",
+        "static-analysis": "Run static code analysis",
         "test": "Run all test suites.",
         "test-coverage": "Generate code coverage reports in tests/coverage."
     },
     "config": {
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "archive": {
+        "exclude": [
+            "_config.yml",
+            ".*",
+            "phpunit.*",
+            "tests"
+        ]
     }
 }
