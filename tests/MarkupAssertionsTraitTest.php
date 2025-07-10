@@ -285,7 +285,7 @@ class MarkupAssertionsTraitTest extends TestCase
     /**
      * Data provider for testFlattenAttributeArray().
      *
-     * @return array<string,array{array<string,string>,string}>
+     * @return array<string,array{array<string,?string>,string}>
      */
     public function provideAttributes(): array
     {
