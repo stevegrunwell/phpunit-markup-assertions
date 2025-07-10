@@ -1,7 +1,15 @@
 parameters:
-	level: 6
+	level: 10
+
+	# Code to be analyzed
 	paths:
 		- src
 		- tests
+
+	# Don't worry about the coverage reports
 	excludePaths:
-		- tests/coverage
+		- tests/coverage (?)
+
+	# PHPUnit Bridge puts the PHPUnit source in an unconventional location
+	scanDirectories:
+		- vendor/bin/.phpunit/phpunit

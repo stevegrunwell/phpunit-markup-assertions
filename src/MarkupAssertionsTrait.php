@@ -127,11 +127,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringContainsString')
-            ? 'assertStringContainsString'
-            : 'assertContains'; // @codeCoverageIgnore
-
-        $this->$method(
+        $this->assertStringContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -152,11 +148,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringNotContainsString')
-            ? 'assertStringNotContainsString'
-            : 'assertNotContains'; // @codeCoverageIgnore
-
-        $this->$method(
+        $this->assertStringNotContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -177,6 +169,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertMatchesRegularExpression')
             ? 'assertMatchesRegularExpression'
             : 'assertRegExp'; // @codeCoverageIgnore
@@ -202,6 +195,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
             ? 'assertDoesNotMatchRegularExpression'
             : 'assertNotRegExp'; // @codeCoverageIgnore
@@ -252,7 +246,7 @@ trait MarkupAssertionsTrait
             if (empty($value)) {
                 $value = sprintf('[%s]', $key);
             } else {
-                $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
+                $value = sprintf('[%s="%s"]', $key, htmlspecialchars((string) $value));
             }
         });
 
@@ -276,10 +270,14 @@ trait MarkupAssertionsTrait
 
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
+            if (!isset($result->firstChild)) {
+                continue;
+            }
+
             $document = new \DOMDocument();
             $document->appendChild($document->importNode($result->firstChild, true));
 
-            $contents[] = trim(html_entity_decode($document->saveHTML()));
+            $contents[] = trim(html_entity_decode((string) $document->saveHTML()));
         }
 
         return implode(PHP_EOL, $contents);
