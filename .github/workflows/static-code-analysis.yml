@@ -19,5 +19,10 @@ jobs:
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
 
+      # PHPUnit Bridge won't install a version of PHPUnit by default, but this will trick
+      # it into doing so.
+      - name: Install PHPUnit
+        run: composer test -- --version
+
       - name: Run PHPStan
         run: composer static-analysis
