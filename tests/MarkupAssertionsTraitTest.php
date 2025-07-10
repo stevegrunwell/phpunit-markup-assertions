@@ -44,8 +44,9 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox assertNotContainsSelector() should verify that the given selector does not exist
      * @dataProvider provideSelectorVariants
      */
-    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist(string $selector): void
-    {
+    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist(
+        string $selector
+    ): void {
         $this->assertNotContainsSelector(
             $selector,
             '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>'
@@ -270,8 +271,11 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox getInnerHtmlOfMatchedElements() should retrieve the inner HTML
      * @dataProvider provideInnerHtml
      */
-    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML(string $markup, string $selector, string $expected): void
-    {
+    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML(
+        string $markup,
+        string $selector,
+        string $expected
+    ): void {
         $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 
