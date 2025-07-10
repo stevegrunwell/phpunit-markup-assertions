@@ -19,7 +19,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox assertContainsSelector() should find matching selectors
      * @dataProvider provideSelectorVariants
      */
-    public function assertContainsSelector_should_find_matching_selectors($selector)
+    public function assertContainsSelector_should_find_matching_selectors(string $selector): void
     {
         $this->assertContainsSelector(
             $selector,
@@ -31,7 +31,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertContainsSelector() should pick up multiple instances of a selector
      */
-    public function assertContainsSelector_should_pick_up_multiple_instances()
+    public function assertContainsSelector_should_pick_up_multiple_instances(): void
     {
         $this->assertContainsSelector(
             'a',
@@ -44,8 +44,9 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox assertNotContainsSelector() should verify that the given selector does not exist
      * @dataProvider provideSelectorVariants
      */
-    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist($selector)
-    {
+    public function assertNotContainsSelector_should_verify_that_the_given_selector_does_not_exist(
+        string $selector
+    ): void {
         $this->assertNotContainsSelector(
             $selector,
             '<h1 id="page-title" class="foo bar">This element has little to do with the link.</h1>'
@@ -56,7 +57,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertSelectorCount() should count the instances of a selector
      */
-    public function assertSelectorCount_should_count_the_number_of_instances()
+    public function assertSelectorCount_should_count_the_number_of_instances(): void
     {
         $this->assertSelectorCount(
             3,
@@ -69,7 +70,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertHasElementWithAttributes() should find an element with the given attributes
      */
-    public function assertHasElementWithAttributes_should_find_elements_with_matching_attributes()
+    public function assertHasElementWithAttributes_should_find_elements_with_matching_attributes(): void
     {
         $this->assertHasElementWithAttributes(
             [
@@ -85,7 +86,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox assertHasElementWithAttributes() should be able to parse spaces in attribute values
      * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/13
      */
-    public function assertHasElementWithAttributes_should_be_able_to_handle_spaces()
+    public function assertHasElementWithAttributes_should_be_able_to_handle_spaces(): void
     {
         $this->assertHasElementWithAttributes(
             [
@@ -99,7 +100,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertNotHasElementWithAttributes() should ensure no element has the provided attributes
      */
-    public function assertNotHasElementWithAttributes_should_find_no_elements_with_matching_attributes()
+    public function assertNotHasElementWithAttributes_should_find_no_elements_with_matching_attributes(): void
     {
         $this->assertNotHasElementWithAttributes(
             [
@@ -114,7 +115,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementContains() should be able to search for a selector
      */
-    public function assertElementContains_can_match_a_selector()
+    public function assertElementContains_can_match_a_selector(): void
     {
         $this->assertElementContains(
             'ipsum',
@@ -127,7 +128,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementContains() should be able to chain multiple selectors
      */
-    public function assertElementContains_can_chain_multiple_selectors()
+    public function assertElementContains_can_chain_multiple_selectors(): void
     {
         $this->assertElementContains(
             'ipsum',
@@ -140,7 +141,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementContains() should scope text to the selected element
      */
-    public function assertElementContains_should_scope_matches_to_selector()
+    public function assertElementContains_should_scope_matches_to_selector(): void
     {
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('The #main div does not contain the string "ipsum".');
@@ -159,7 +160,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @dataProvider provideGreetingsInDifferentLanguages
      * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
      */
-    public function assertElementContains_should_handle_various_character_sets($greeting)
+    public function assertElementContains_should_handle_various_character_sets(string $greeting): void
     {
         $this->assertElementContains(
             $greeting,
@@ -172,7 +173,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementNotContains() should be able to search for a selector
      */
-    public function assertElementNotContains_can_match_a_selector()
+    public function assertElementNotContains_can_match_a_selector(): void
     {
         $this->assertElementNotContains(
             'ipsum',
@@ -187,7 +188,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @dataProvider provideGreetingsInDifferentLanguages
      * @ticket https://github.com/stevegrunwell/phpunit-markup-assertions/issues/31
      */
-    public function assertElementNotContains_should_handle_various_character_sets($greeting)
+    public function assertElementNotContains_should_handle_various_character_sets(string $greeting): void
     {
         $this->assertElementNotContains(
             $greeting,
@@ -200,7 +201,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementRegExp() should use regular expression matching
      */
-    public function assertElementRegExp_should_use_regular_expression_matching()
+    public function assertElementRegExp_should_use_regular_expression_matching(): void
     {
         $this->assertElementRegExp(
             '/[A-Z0-9-]+/',
@@ -213,7 +214,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementRegExp() should be able to search for nested contents
      */
-    public function assertElementRegExp_should_be_able_to_match_nested_contents()
+    public function assertElementRegExp_should_be_able_to_match_nested_contents(): void
     {
         $this->assertElementRegExp(
             '/[A-Z]+/',
@@ -226,7 +227,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox assertElementNotRegExp() should use regular expression matching
      */
-    public function testAssertElementNotRegExp()
+    public function testAssertElementNotRegExp(): void
     {
         $this->assertElementNotRegExp(
             '/[0-9-]+/',
@@ -240,8 +241,10 @@ class MarkupAssertionsTraitTest extends TestCase
      * @test
      * @testdox flattenAttributeArray() should flatten an array of attributes
      * @dataProvider provideAttributes
+     *
+     * @param array<string,string> $attributes
      */
-    public function flattenArrayAttribute_should_flatten_arrays_of_attributes($attributes, $expected)
+    public function flattenArrayAttribute_should_flatten_arrays_of_attributes(array $attributes, string $expected): void
     {
         $method = new \ReflectionMethod($this, 'flattenAttributeArray');
         $method->setAccessible(true);
@@ -254,7 +257,7 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox flattenAttributeArray() should throw a RiskyTestError if the array is empty
      * @dataProvider provideAttributes
      */
-    public function flattenAttributeArray_should_throw_a_RiskyTestError_if_given_an_empty_array()
+    public function flattenAttributeArray_should_throw_a_RiskyTestError_if_given_an_empty_array(): void
     {
         $this->expectException(RiskyTestError::class);
 
@@ -268,8 +271,11 @@ class MarkupAssertionsTraitTest extends TestCase
      * @testdox getInnerHtmlOfMatchedElements() should retrieve the inner HTML
      * @dataProvider provideInnerHtml
      */
-    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML($markup, $selector, $expected)
-    {
+    public function getInnerHtmlOfMatchedElements_should_retrieve_the_inner_HTML(
+        string $markup,
+        string $selector,
+        string $expected
+    ): void {
         $method = new \ReflectionMethod($this, 'getInnerHtmlOfMatchedElements');
         $method->setAccessible(true);
 
@@ -278,8 +284,10 @@ class MarkupAssertionsTraitTest extends TestCase
 
     /**
      * Data provider for testFlattenAttributeArray().
+     *
+     * @return array<string,array{array<string,string>,string}>
      */
-    public function provideAttributes()
+    public function provideAttributes(): array
     {
         return [
             'Single attribute' => [
@@ -321,7 +329,7 @@ class MarkupAssertionsTraitTest extends TestCase
      *
      * @return array<string,array<string>>
      */
-    public function provideInnerHtml()
+    public function provideInnerHtml(): array
     {
         return [
             'A single match' => [
@@ -347,7 +355,7 @@ class MarkupAssertionsTraitTest extends TestCase
      *
      * @return array<string,array<string>>
      */
-    public function provideSelectorVariants()
+    public function provideSelectorVariants(): array
     {
         return [
             'Simple tag name' => ['a'],
@@ -365,7 +373,7 @@ class MarkupAssertionsTraitTest extends TestCase
      *
      * @return array<string,array<string>>
      */
-    public function provideGreetingsInDifferentLanguages()
+    public function provideGreetingsInDifferentLanguages(): array
     {
         return [
             'Arabic'    => ['مرحبا!'],

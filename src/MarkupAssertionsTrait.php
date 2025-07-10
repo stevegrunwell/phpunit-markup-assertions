@@ -249,7 +249,7 @@ trait MarkupAssertionsTrait
 
         array_walk($attributes, function (&$value, $key) {
             // Boolean attributes.
-            if (null === $value) {
+            if (empty($value)) {
                 $value = sprintf('[%s]', $key);
             } else {
                 $value = sprintf('[%s="%s"]', $key, htmlspecialchars($value));
