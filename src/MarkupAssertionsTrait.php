@@ -127,11 +127,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringContainsString')
-            ? 'assertStringContainsString'
-            : 'assertContains'; // @codeCoverageIgnore
-
-        $this->$method(
+        $this->assertStringContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -152,11 +148,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotContains($contents, $selector = '', $markup = '', $message = '')
     {
-        $method = method_exists($this, 'assertStringNotContainsString')
-            ? 'assertStringNotContainsString'
-            : 'assertNotContains'; // @codeCoverageIgnore
-
-        $this->$method(
+        $this->assertStringNotContainsString(
             $contents,
             $this->getInnerHtmlOfMatchedElements($markup, $selector),
             $message
@@ -177,6 +169,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertMatchesRegularExpression')
             ? 'assertMatchesRegularExpression'
             : 'assertRegExp'; // @codeCoverageIgnore
@@ -202,6 +195,7 @@ trait MarkupAssertionsTrait
      */
     public function assertElementNotRegExp($regexp, $selector = '', $markup = '', $message = '')
     {
+        // @phpstan-ignore function.alreadyNarrowedType (Introduced in PHPUnit 9.x, PHP 7.3+)
         $method = method_exists($this, 'assertDoesNotMatchRegularExpression')
             ? 'assertDoesNotMatchRegularExpression'
             : 'assertNotRegExp'; // @codeCoverageIgnore
