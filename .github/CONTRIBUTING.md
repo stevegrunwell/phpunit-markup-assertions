@@ -36,7 +36,7 @@ When submitting a new pull request, your `feature/my-cool-new-feature` should be
 
 ### Coding standards
 
-This project uses [the PSR-2 coding standards](http://www.php-fig.org/psr/psr-2/).
+This project uses [the PSR-12 coding standards](http://www.php-fig.org/psr/psr-12/).
 
 Standards are enforced via [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer/), which can be run any time with the following:
 
@@ -52,6 +52,7 @@ composer test:standards
 ```sh
 composer test:unit
 ```
+
 
 #### Code coverage
 
