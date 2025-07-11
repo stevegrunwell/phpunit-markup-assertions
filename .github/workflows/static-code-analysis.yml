@@ -25,4 +25,4 @@ jobs:
         run: composer test -- --version
 
       - name: Run PHPStan
-        run: composer static-analysis
+        run: composer test:analysis

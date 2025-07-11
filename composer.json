@@ -37,24 +37,33 @@
         }
     },
     "scripts": {
-        "coding-standards": [
-            "phpcs"
+        "test": [
+            "@test:all"
         ],
-        "static-analysis": [
+        "test:all": [
+            "@test:unit",
+            "@test:standards",
+            "@test:analysis"
+        ],
+        "test:analysis": [
             "phpstan analyse"
         ],
-        "test": [
-            "simple-phpunit --testdox"
-        ],
-        "test-coverage": [
+        "test:coverage": [
             "XDEBUG_MODE=coverage ./vendor/bin/simple-phpunit --coverage-html=tests/coverage --colors=always"
+        ],
+        "test:standards": [
+            "phpcs"
+        ],
+        "test:unit": [
+            "simple-phpunit --testdox"
         ]
     },
     "scripts-descriptions": {
-        "coding-standards": "Check coding standards.",
-        "static-analysis": "Run static code analysis",
-        "test": "Run all test suites.",
-        "test-coverage": "Generate code coverage reports in tests/coverage."
+        "test:all": "Run all automated tests",
+        "test:analysis": "Run static code analysis",
+        "test:coverage": "Generate code coverage reports in tests/coverage.",
+        "test:standards": "Check coding standards.",
+        "test:unit": "Run all test suites."
     },
     "config": {
         "preferred-install": "dist",

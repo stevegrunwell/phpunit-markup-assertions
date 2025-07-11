@@ -9,11 +9,11 @@ Begin by cloning the GitHub repo locally and installing the dependencies with [C
 
 ```sh
 # Clone the repository + change into the directory
-$ git clone https://github.com/stevegrunwell/phpunit-markup-assertions.git \
-    && cd phpunit-markup-assertions
+git clone https://github.com/stevegrunwell/phpunit-markup-assertions.git \
+    && cd phpunit-markup-assertions;
 
 # Install local dependencies
-$ composer install
+composer install
 ```
 
 
@@ -23,12 +23,12 @@ Pull requests should be based off the `develop` branch, which represents the cur
 
 To create a new feature branch:
 
-```bash
+```sh
 # Start on develop, making sure it's up-to-date
-$ git checkout develop && git pull
+git checkout develop && git pull;
 
 # Create a new branch for your feature
-$ git checkout -b feature/my-cool-new-feature
+git checkout -b feature/my-cool-new-feature
 ```
 
 When submitting a new pull request, your `feature/my-cool-new-feature` should be compared against `develop`.
@@ -38,13 +38,19 @@ When submitting a new pull request, your `feature/my-cool-new-feature` should be
 
 This project uses [the PSR-2 coding standards](http://www.php-fig.org/psr/psr-2/).
 
+Standards are enforced via [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer/), which can be run any time with the following:
+
+```sh
+composer test:standards
+```
+
 
 ### Running unit tests
 
 [PHPUnit](https://phpunit.de/) is included as a development dependency, and should be run regularly. When submitting changes, please be sure to add or update unit tests accordingly. You may run unit tests at any time by running:
 
-```bash
-$ composer test
+```sh
+composer test:unit
 ```
 
 #### Code coverage
@@ -53,8 +59,8 @@ $ composer test
 
 To generate a report of code coverage for the current branch, you may run the following Composer script, which will generate an HTML report in `tests/coverage/`:
 
-```bash
-$ composer test-coverage
+```sh
+composer test:coverage
 ```
 
 Note that [both the Xdebug and tokenizer PHP extensions must be installed and active](https://phpunit.de/manual/current/en/textui.html) on the machine running the tests.
