@@ -271,7 +271,7 @@ trait MarkupAssertionsTrait
         // Loop through results and collect their innerHTML values.
         foreach ($results as $result) {
             if (!isset($result->firstChild)) {
-                continue;
+                continue; // @codeCoverageIgnore
             }
 
             $document = new \DOMDocument();
