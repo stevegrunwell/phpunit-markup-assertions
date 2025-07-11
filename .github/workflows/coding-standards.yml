@@ -20,4 +20,4 @@ jobs:
         uses: ramsey/composer-install@v2
 
       - name: Run test suite
-        run: composer coding-standards
+        run: composer test:standards
